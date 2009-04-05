@@ -260,7 +260,7 @@ void sys_get_time_string(char *str_buf)
 	struct tm *tm;
 
 	gettimeofday(&tv, &tz);
-	tm = localtime(tv.tv_sec);
+	tm = localtime(&tv.tv_sec);
 
 	sprintf(str_buf, "%02d:%02d:%02d:%03d",
 		tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec / 1000);
