@@ -214,7 +214,7 @@ bool SDLSystemDisplay::changeResolution(const DisplayCharacteristics &aCharacter
 		SDL_Event ev;
 		SDL_mutex *tmpmutex;
 	
-		//DPRINTF("Forward handler got called\n");
+		DPRINTF("forwarding call to changeResolution\n");
 		ev.type = SDL_USEREVENT;
 		ev.user.code = 1;
 				
@@ -234,7 +234,7 @@ bool SDLSystemDisplay::changeResolution(const DisplayCharacteristics &aCharacter
 		return mChangeResRet;
 	} else {
 		// we can call it directly because we are in the same thread
-		//ht_printf("direct call\n");
+		DPRINTF("directly calling changeResolution\n");
 		return changeResolutionREAL(aCharacteristics);
 	}
 
@@ -311,7 +311,7 @@ bool SDLSystemDisplay::changeResolutionREAL(const DisplayCharacteristics &aChara
 	}
 #endif
 
-	ht_printf("SDL: running SDL_SetVideoMode()\n");
+	DPRINTF("running SDL_SetVideoMode()\n");
 	gSDLScreen = SDL_SetVideoMode(aCharacteristics.width, aCharacteristics.height,
                           bitsPerPixel, videoFlags);
 
@@ -321,7 +321,7 @@ bool SDLSystemDisplay::changeResolutionREAL(const DisplayCharacteristics &aChara
 		exit(1);
 	}
 
-	ht_printf("SDL: video mode successfully set\n");
+	DPRINTF("video mode successfully set\n");
 
 #ifdef __WIN32__
 	if (videoFlags & SDL_FULLSCREEN) {

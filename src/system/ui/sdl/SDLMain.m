@@ -373,12 +373,17 @@ int main (int argc, char **argv)
         gFinderLaunch = NO;
     }
 
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 #if SDL_USE_NIB_FILE
     [SDLApplication poseAsClass:[NSApplication class]];
     NSApplicationMain (argc, argv);
 #else
     CustomApplicationMain (argc, argv);
 #endif
+
+	[pool release];
+
     return 0;
 }
 

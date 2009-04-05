@@ -48,6 +48,9 @@
 
 #include "syssdl.h"
 
+//#define DPRINTF(a...)
+#define DPRINTF(a...) ht_printf("[Display/SDL]: "a)
+
 SDL_Surface *	gSDLScreen;
 static bool	gSDLVideoExposePending = false;
 SDL_TimerID SDL_RedrawTimerID;
@@ -355,20 +358,8 @@ static Uint32 SDL_redrawCallback(Uint32 interval, void *param)
 sys_timer gSDLRedrawTimer;
 static bool eventThreadAlive;
 
-static void *SDLeventLoop(void *p)
+static int SDLeventLoop(void *p)
 {
-	ht_printf("SDL: running SDL_Init()\n");
-#ifdef __WIN32__
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE) < 0) {
-#else
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTTHREAD | SDL_INIT_NOPARACHUTE) < 0) {
-#endif
-		ht_printf("SDL: Unable to init: %s\n", SDL_GetError());
-		exit(1);
-	}
-	ht_printf("SDL: SDL_Init succeeded\n");
-
-	atexit(SDL_Quit); // give SDl a chance to clean up before exit!
 	sd = (SDLSystemDisplay*)gDisplay;
 
 	sd->initCursor();
@@ -402,7 +393,7 @@ static void *SDLeventLoop(void *p)
 
 	eventThreadAlive = false;
 	
-	return NULL;
+	return 0;
 }
 
 SystemDisplay *allocSystemDisplay(const char *title, const DisplayCharacteristics &chr, int redraw_ms);
@@ -415,26 +406,41 @@ void initUI(const char *title, const DisplayCharacteristics &aCharacteristics, i
 	createSDLToADBKeytable();
 #endif
 
-	sys_thread SDLeventLoopThread;
+	SDL_Thread *SDLeventLoopThread;
+
+	DPRINTF("running SDL_Init()\n");
+//#ifdef __WIN32__
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE) < 0) {
+//#else
+//	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTTHREAD | SDL_INIT_NOPARACHUTE) < 0) {
+//#endif
+		DPRINTF("Unable to init: %s\n", SDL_GetError());
+		exit(1);
+	}
+	DPRINTF("SDL_Init succeeded\n");
+
+	atexit(SDL_Quit); // give SDL a chance to clean up before exit!
 
 	gDisplay = allocSystemDisplay(title, aCharacteristics, redraw_ms);
 	gMouse = allocSystemMouse();
 	gKeyboard = allocSystemKeyboard();
 	if (!gKeyboard->setKeyConfig(keyConfig)) {
-		ht_printf("no keyConfig, or is empty");
+		DPRINTF("no keyConfig, or is empty");
 		exit(1);
 	}
 
 	gDisplay->mFullscreen = fullscreen;
 
-	if (sys_create_thread(&SDLeventLoopThread, 0, SDLeventLoop, NULL)) {
-		ht_printf("SDL: can't create event thread!\n");
+	SDLeventLoopThread = SDL_CreateThread(SDLeventLoop, NULL);
+
+	if (!SDLeventLoopThread) {
+		DPRINTF("can't create event thread!\n");
 		exit(1);
 	}
 
 	while (!eventThreadAlive) {
-		ht_printf("SDL: waiting for event thread to catch up...\n");
-		usleep(10000); // 10MS
+		DPRINTF("waiting for event thread to catch up...\n");
+		usleep(100000); // 100 MS
 	}
 }
 
