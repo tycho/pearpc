@@ -334,6 +334,7 @@ dnl	ac_qtdir_errmsg="not found in current PATH. Maybe QT development environment
 	PPC_LDFLAGS="$PPC_LDFLAGS $QT_LDFLAGS"
 ;;
 gtk)
+	PPC_LDFLAGS="$PPC_LDFLAGS $(pkg-config gtk+-2.0 --libs)"
 ;;
 beos)
 ;;
