@@ -21,7 +21,11 @@
 
 #include <cstdlib>
 
+#ifdef __MACH__
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include "system/display.h"
 #include "system/keyboard.h"

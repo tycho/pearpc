@@ -21,7 +21,11 @@
 #ifndef __SYSSDL_H__
 #define __SYSSDL_H__
 
+#ifdef __MACH__
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include "system/display.h"
 #include "system/systhread.h"

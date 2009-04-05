@@ -26,8 +26,13 @@
 #include <cstring>
 #include <unistd.h>
 
+#ifdef __MACH__
+#include <SDL/SDL.h>
+#include <SDL/SDL_thread.h>
+#else
 #include <SDL.h>
 #include <SDL_thread.h>
+#endif
 
 #ifdef __WIN32__
 // We need ChangeDisplaySettings
@@ -306,6 +311,7 @@ bool SDLSystemDisplay::changeResolutionREAL(const DisplayCharacteristics &aChara
 	}
 #endif
 
+	ht_printf("SDL: running SDL_SetVideoMode()\n");
 	gSDLScreen = SDL_SetVideoMode(aCharacteristics.width, aCharacteristics.height,
                           bitsPerPixel, videoFlags);
 
@@ -314,6 +320,8 @@ bool SDLSystemDisplay::changeResolutionREAL(const DisplayCharacteristics &aChara
 		ht_printf("SDL: FATAL: can't switch mode?!\n");
 		exit(1);
 	}
+
+	ht_printf("SDL: video mode successfully set\n");
 
 #ifdef __WIN32__
 	if (videoFlags & SDL_FULLSCREEN) {

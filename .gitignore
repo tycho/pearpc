@@ -1,6 +1,8 @@
 *.o
 *.a
 *.deps
+*.pbxuser
+*.perspectivev3
 *Makefile.in
 *Makefile
 scripts/ifppc_down.setuid
@@ -9,6 +11,7 @@ src/debug/debugparse.c
 src/debug/debugparse.h
 src/debug/lex.c
 src/ppc
+xcode/build
 aclocal.m4
 autom4te.cache
 config.guess

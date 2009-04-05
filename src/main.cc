@@ -23,6 +23,10 @@
 #include <exception>
 #include <unistd.h>
 
+#ifdef __MACH__
+#include <SDL/SDL.h>
+#endif
+
 #include "info.h"
 #include "cpu/cpu.h"
 //#include "cpu_generic/ppc_tools.h"
@@ -184,15 +188,6 @@ void usage()
 	ht_printf("usage: ppc configfile\n");
 	exit(1);
 }
-
-#ifdef main
-// Get rid of stupid SDL main redefinitions
-#undef main
-extern "C" int SDL_main(int argc, char *argv[])
-{
-	return 0;
-}
-#endif
 
 int main(int argc, char *argv[])
 {

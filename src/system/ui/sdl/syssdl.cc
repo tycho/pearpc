@@ -20,8 +20,13 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifdef __MACH__
+#include <SDL/SDL.h>
+#include <SDL/SDL_thread.h>
+#else
 #include <SDL.h>
 #include <SDL_thread.h>
+#endif
 
 #include <csignal>
 #include <cstdlib>
@@ -352,7 +357,7 @@ static bool eventThreadAlive;
 
 static void *SDLeventLoop(void *p)
 {
-	eventThreadAlive = true;
+	ht_printf("SDL: running SDL_Init()\n");
 #ifdef __WIN32__
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE) < 0) {
 #else
@@ -361,6 +366,7 @@ static void *SDLeventLoop(void *p)
 		ht_printf("SDL: Unable to init: %s\n", SDL_GetError());
 		exit(1);
 	}
+	ht_printf("SDL: SDL_Init succeeded\n");
 
 	atexit(SDL_Quit); // give SDl a chance to clean up before exit!
 	sd = (SDLSystemDisplay*)gDisplay;
@@ -370,7 +376,7 @@ static void *SDLeventLoop(void *p)
 	sd->updateTitle();
 	sd->mEventThreadID = SDL_ThreadID();
 
-        SDL_WM_GrabInput(SDL_GRAB_OFF);
+	SDL_WM_GrabInput(SDL_GRAB_OFF);
 
 	sd->changeResolution(sd->mClientChar);
 	sd->setExposed(true);
@@ -379,6 +385,8 @@ static void *SDLeventLoop(void *p)
 	SDL_RedrawTimerID = SDL_AddTimer(gDisplay->mRedraw_ms, SDL_redrawCallback, NULL);
 
 	sd->setFullscreenMode(sd->mFullscreen);
+
+	eventThreadAlive = true;
 
 	SDL_Event event;
 	do {
@@ -422,6 +430,11 @@ void initUI(const char *title, const DisplayCharacteristics &aCharacteristics, i
 	if (sys_create_thread(&SDLeventLoopThread, 0, SDLeventLoop, NULL)) {
 		ht_printf("SDL: can't create event thread!\n");
 		exit(1);
+	}
+
+	while (!eventThreadAlive) {
+		ht_printf("SDL: waiting for event thread to catch up...\n");
+		usleep(10000); // 10MS
 	}
 }
 
