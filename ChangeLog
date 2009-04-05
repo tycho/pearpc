@@ -1,0 +1,127 @@
+ PearPC ChangeLog
+==================
+
+version 0.5pre (not yet released):
+	- slightly better code for lmw/stmw opcodes
+	- use GNU as instead of nasm
+	- use -mdynamic-no-pic on *darwin
+
+version 0.4 (released 20. December 2005):
+	- CPU: stfiwx implemented
+	- config: "ppc_start_fullscreen" for starting in fullscreen mode
+	- POSIX: allow bridging of tun device
+	- use FISTTP instruction on SSE3 aware processors
+	- merged native_cd branch from Alexander Stockinger
+	- endianess fixes
+	- warn that the generic CPU is slow
+	- better detection of HFS+ volumes
+	- support for DVD-Drives
+	- correctly check for NASM
+	- Work-around for graphic errors in Mac OS X 10.1
+	- POSIX/Linux: fall back to 1 GHz if /proc/cpuinfo doesn't provide cpu frequency
+	- 3c90x emulation fixed
+	- some PROM fixed for yaboot
+	- alteration of x86asm interface to be more programmer friendly
+	- use transparent cursors instead of altering cursor visibility (hack for using PearPC
+	  with remote desktop)
+	- DVD emulation implemented.  Fixes problems with Tiger installation
+	- Updated the read_effective_* commands to be faster !!! REGRESSED !!!
+	- fixed lvalue casts (compiles now with gcc 4.x)
+
+version 0.3.1 (released 5. September 2004):
+	- JITC_X86: increased translation cache size
+	- (Win32) fixed: '`'/'~' key wasn't mapped
+	- (SDL) fixed: right-alt was mapped to left-alt
+	- fixed: German '<>|' key wasn't mapped
+	- JITC_X86: corrected tw/twi instructions (should fix java native IO calls fail)
+	- fixed: rfi instruction (should also fix java native IO calls fail)
+	- fixed: some mysterious partition mappings in src/io/prom/fs/hfsplus/partition.c
+	- (BEOS) updated
+	- disabled unused keyboard shortcuts
+	
+version 0.3 (released 13. August 2004):
+	- clean up everything on exit
+	- (experimental) idle sleep for the JITC CPU
+	- asynchronous keyboard and mouse events
+	- implemented IDE Flush
+	- Win32: implemented fullscreen mode proposed by Matt Jobson
+	- short cut keys are configurable
+	- correct clock/timing (Win32 + Posix) by Keith Rothman, Kimball Thurston and Stefan Weyergraf
+	- SDL support
+	- SDL: implemented fullscreen mode
+	- source tree reorganisation
+		- display functions moved to src/system/ui directory
+		- src/system/arch created
+		- system/posix,win32 and beos moved to system/osapi/
+		- host keyboard support separated from SystemDisplay
+		- host mouse support separated from SystemDisplay
+	- architecture-specific video acceleration functions (x86)
+	- configure-system: choose "jitc_x86" on x86s when no --enable-cpu given
+	- JITC: srawix, subfcx, divwx, divuwx, 
+		mulhwx, mulwx, subfex, extshx implemented
+	- JITC: align entrypoints
+
+version 0.2 (released 15. June 2004):
+	- JITC: all crXX implemented
+	- JITC: tlbie only invalidate one entry
+	- JITC: optimize tlb_invalidate_all
+	- implemented fsqrtx instruction
+	- implemented frsqrtex instruction
+	- IO/IDE: regs are per device, not per controller
+	- implemented runtime video mode switching via video.x (Win32 + X11)
+	- got rid of indexed modes
+	- better XER carry mapping
+	- (POSIX) fixed: Alt and AltGr are swapped
+	- HFS partition code fixes (reportedly working)
+	- removed tools/regex.c, tools/regex.h, io/prom/hfs/memcmp.c
+	- implemented conditional redraw code proposed by Jens von der Heydt
+	- code to minimize redraw races
+	- bnstr() is evil and has been banned. fixes: can't parse pci_3c90x_mac
+	- X11: only redraw when exposed (thanks ryan)
+	- Win32: only redraw when exposed
+	- new hardware
+		- RealTek-8139 network card driver by Eric Estabrooks (verbose15)
+	- porting efforts
+		- Francois Revol's BeOS patches (2,4,6-fixes,6-beos,6-compose)
+		- Anders F.Bjoerklund's Mac OS X patches (1,ppc,X11,darwintun)
+		- Roman Bogorodskiy's FreeBSD patch
+		- AMD64 portability fixes (mainly void* <-> int conversions)
+		- Windows Networking support by John Kelley using TAP-WIN32 driver R2
+	- many, many configure-system fixes
+		- support for FreeBSD, BeOS, MinGW and Darwin
+		- endianess auto-detect v2 (but big-endian hosts still not working correctly)
+		- autoconf-2.13 endianess detection work-around
+		- now using -Wundef and -Woverloaded-virtual compiler switches
+	- networking code abstraction
+	- preliminary man-page added
+	- fdisk and single partition images support by Anders F.Bjoerklund
+	- 3c90x now correctly detected by Mac OS X (if driver is loaded)
+	- grab mouse on click / ungrab mouse on unfocus (Win32 + X11)
+
+version 0.1.2 (released 20. May 2004):
+	- PROM: fixed: seek > 2^32 not impl.
+	- JITC: fixed mmio with overlapping pages 
+	  (should fix "mac os crashes when idle")
+	- numpad keys mapped
+	- (Win32) fixed: "'" key wasn't mapped
+	- (Win32) fixed: F8 key wasn't mapped
+	- (Win32) fixed: crash when unknown keys in F11 mode pressed
+	- 3c90x: added MII support, some bugs fixed
+
+version 0.1.1 (released 14. May 2004):
+	- (Win32) fixed: '=' key wasn't mapped
+	- fixed: JITC Error: cannot read page-table
+	- fixes for older BootX (for Mac OS X 10.0 and 10.1)
+	- FPU: multiply-add-type instructions now working correctly
+	- HFS+ embedded in HFS should work now (untested though)
+	- gcard: 1024x768x32 mode wasn't useable
+	- io registers weren't zero extended on byte or half accesses
+	- now also compiles with gcc 2.95
+	- boots debian for PowerPC
+	- got rid of printf() and exit() in HFS and HFS+ code
+	- fixed buggy copyTo() and copyAllTo() in stream.cc
+	- fixed IDEDevice::read(). must update "tel".
+	- no more "client and server display characteristics DONT match :-("
+
+version 0.1 (released 10. May 2004):
+	- initial release

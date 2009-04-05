@@ -1,0 +1,21 @@
+#
+# BE CAREFUL. THIS SCRIPT IS INVOKED BY A SETUID ROOT BINARY!
+# IT SHOULD BE OWNED BY ROOT.
+# ONLY ROOT SHOULD HAVE WRITE-ACCESS TO THIS FILE.
+#
+
+. ./scripts/settings
+
+if [ $BRIDGE == 1 ]; then
+	rm $PPC_INTERFACE.active
+	brctl delif $BRIDGE_INTERFACE $PPC_INTERFACE
+	if [ `ls -l *.active | wc -l` == 0 ]; then
+		# If this is the last ppc interface, down the whole bridge
+		ifconfig $BRIDGE_INTERFACE down
+		brctl delbr $BRIDGE_INTERFACE
+		ifconfig $HOST_INTERFACE $HOST_IP netmask $HOST_NETMASK up
+		route add -net default gw $HOST_DEFAULT_ROUTER
+	fi
+else
+	/sbin/ifconfig $PPC_INTERFACE down
+fi

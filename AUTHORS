@@ -1,0 +1,28 @@
+
+                              AUTHORS
+                            ===========
+
+
+Main developer: Sebastian Biallas                  <sb @ biallas . net>
+Some major parts by: Stefan Weyergraf
+AltiVec and other core updates by: Daniel Foesch   <dfoesch @ cs . nmsu . edu>
+
+Contributions by (in alphabetical order):
+	* Anders F. Bjoerklund
+	* Roman Bogorodskiy
+	* Eric Estabrooks
+	* Daniel Foesch
+	* Jens von der Heydt
+	* John Kelley
+	* Matt Jobson
+	* Keith Rothman
+	* Alexander Stockinger
+	* Kimball Thurston
+
+Contains code stolen (i.e. copied with respect to the GPL) from:
+
+	* HT Editor                                 <http://hte.sf.net>
+	* Linux                                     <http://kernel.org>
+	* Bochs	                                  <http://bochs.sf.net>
+	* MOL                               <http://www.maconlinux.org> 
+	* Yaboot                <http://penguinppc.org/projects/yaboot>
