@@ -1,4 +1,3 @@
-asfasfasf as f asf asfasf as f asdf
 /*
  *	HT Editor
  *	store.h
