@@ -13,7 +13,7 @@ AC_SUBST(VERSION)
 AC_ARG_ENABLE(release,
 	[  --enable-release        make an optimized build [default=yes]],,enable_release="yes")
 AC_ARG_ENABLE(fpo,
-	[  --enable-fpo            compile with -fomit-frame-pointer [default=yes]],,enable_fpo="yes")
+	[  --enable-fpo            compile with -fomit-frame-pointer [default=no]],,enable_fpo="no")
 AC_ARG_ENABLE(profiling,
 	[  --enable-profiling      make a profile build (implies debug) [default=no]],,enable_profiling="no")
 AC_ARG_ENABLE(debug,
@@ -23,8 +23,8 @@ AC_ARG_ENABLE(cpu,
 AC_ARG_ENABLE(ui,
 	[  --enable-ui             choose ui (beos, gtk, qt, sdl, win32, or x11) [system-specific defaults]],,enable_ui="no")
 
-PPC_CFLAGS="-Wundef -Wall -fsigned-char"
-PPC_CXXFLAGS="-Wundef -Wall -Woverloaded-virtual -fsigned-char"
+PPC_CFLAGS="-Wundef -Wall -fsigned-char -fno-strict-aliasing"
+PPC_CXXFLAGS="-Wundef -Wall -Woverloaded-virtual -fsigned-char -fno-strict-aliasing"
 PPC_LDADD=""
 PPC_LDFLAGS="$LDFLAGS"
 PPC_CCASFLAGS=""
@@ -57,7 +57,7 @@ fi
 AM_INIT_AUTOMAKE($PACKAGE,$VERSION,no-define)
 AM_CONFIG_HEADER(config.h)
 
-dnl Check OS specifica
+dnl Check OS specifics
 
 case "$target_os" in
 linux* | gnu* | k*bsd*-gnu)
