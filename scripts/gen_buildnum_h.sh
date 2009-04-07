@@ -8,7 +8,7 @@ SCRIPTPATH="$(echo $0 | rev | cut -d '/' -f2,3,4,5,6,7,8,9,10,11,12,13 | rev)"
 RELEASEVER="$(cat $SCRIPTPATH/release_ver 2> /dev/null)"
 RELEASEVER_TAG="$(cat $SCRIPTPATH/release_ver 2> /dev/null | cut -d'-' -f1)"
 
-echo -n "Is CrissCross under version control? "
+echo -n "Under version control? "
 if [ -x "$SCRIPTPATH/../.git" ]; then
 	echo "Yes"
 	echo -n "Is git installed? "
