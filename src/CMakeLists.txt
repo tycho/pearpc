@@ -11,6 +11,8 @@ add_custom_command(
 )
 endif(WIN32 AND NOT CYGWIN)
 
+set_property(SOURCE cpu/cpu_jitc_x86/jitc_mmu.S PROPERTY LANGUAGE C)
+set_property(SOURCE cpu/cpu_jitc_x86/jitc_tools.s.S PROPERTY LANGUAGE C)
 set_property(SOURCE system/arch/x86/vaccel.S PROPERTY LANGUAGE C)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
