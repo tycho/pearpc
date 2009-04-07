@@ -1,3 +1,6 @@
+*CMakeFiles
+*cmake_install.cmake
+*.DS_Store
 *.o
 *.a
 *.deps
@@ -12,17 +15,4 @@ src/debug/debugparse.h
 src/debug/lex.c
 src/ppc
 xcode/build
-aclocal.m4
-autom4te.cache
-config.guess
-config.h
-config.h.in
-config.log
-config.status
-config.sub
-configure
-depcomp
-install-sh
-missing
-stamp-h1
-ylwrap
+CMakeCache.txt

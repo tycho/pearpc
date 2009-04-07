@@ -17,11 +17,7 @@
 #include <ctype.h>
 
 #include "debug/debugtype.h"
-#ifdef __MACH__
-#include "y.tab.h" // XXX: This seems quite wrong...
-#else
 #include "debugparse.h"
-#endif
 #include "parsehelper.h"
 
 static int lex_pos;

@@ -21,6 +21,10 @@
 // Some stuff from msdn.microsoft.com documentation
 //
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <sys/types.h>
 #include <stdlib.h>
 
@@ -194,3 +198,6 @@ void sys_get_time_string(char *str_buf)
 #endif
 #endif
 }
+
+#endif
+

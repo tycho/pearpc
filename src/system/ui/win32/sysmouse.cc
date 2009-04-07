@@ -19,6 +19,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <cstdlib>
 
 #define WIN32_LEAN_AND_MEAN
@@ -49,3 +53,6 @@ SystemMouse *allocSystemMouse()
 	if (gMouse) return NULL;
 	return new WinSystemMouse();
 }
+
+#endif
+

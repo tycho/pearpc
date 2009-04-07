@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <cstdlib>
 #include "system/systhread.h"
 
@@ -132,3 +136,6 @@ void sys_exit_thread(void *ret)
 void *sys_join_thread(sys_thread t)
 {
 }
+
+#endif
+

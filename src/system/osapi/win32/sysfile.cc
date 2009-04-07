@@ -19,6 +19,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <cctype>
 #include <cerrno>
 #include <cstdlib>
@@ -441,3 +445,5 @@ void sys_free_read_write_execute(void *p)
 {
 	VirtualFree(p, 0, MEM_DECOMMIT | MEM_RELEASE);
 }
+
+#endif

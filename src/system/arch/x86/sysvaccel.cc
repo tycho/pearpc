@@ -18,17 +18,23 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_CPU_X86
+
 #include "system/sysvaccel.h"
 
 #include "tools/snprintf.h"
 
-extern "C" void __attribute__((regparm (3))) x86_mmx_convert_2be555_to_2le555(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_mmx_convert_2be555_to_2le565(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_mmx_convert_2be555_to_4le888(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_sse2_convert_2be555_to_2le555(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_sse2_convert_2be555_to_2le565(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_sse2_convert_2be555_to_4le888(uint32 pixel, byte *input, byte *output);
-extern "C" void __attribute__((regparm (3))) x86_convert_4be888_to_4le888(uint32 pixel, byte *input, byte *output);
+extern "C" {
+	extern void FASTCALL x86_mmx_convert_2be555_to_2le555(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_mmx_convert_2be555_to_2le565(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_mmx_convert_2be555_to_4le888(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_sse2_convert_2be555_to_2le555(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_sse2_convert_2be555_to_2le565(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_sse2_convert_2be555_to_4le888(uint32 pixel, byte *input, byte *output);
+	extern void FASTCALL x86_convert_4be888_to_4le888(uint32 pixel, byte *input, byte *output);
+}
 
 static inline void convertBaseColor(uint &b, uint fromBits, uint toBits)
 {
@@ -122,3 +128,6 @@ void sys_convert_display(
 		genericConvertDisplay(aSrcChar, aDestChar, aSrcBuf, aDestBuf, firstLine, lastLine);
 	}
 }
+
+#endif
+

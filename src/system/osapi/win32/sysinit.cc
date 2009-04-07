@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <sys/types.h>
 
 #include "system/sys.h"
@@ -37,3 +41,6 @@ bool initOSAPI()
 void doneOSAPI()
 {
 }
+
+#endif
+

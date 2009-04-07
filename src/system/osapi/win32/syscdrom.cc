@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
@@ -428,3 +432,6 @@ CDROMDevice *createNativeCDROMDevice(const char *device_name,
 
 	return ret;
 }
+
+#endif
+

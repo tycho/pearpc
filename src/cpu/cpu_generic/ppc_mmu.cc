@@ -68,7 +68,7 @@ static int ppc_pte_protection[] = {
 	0, // r
 };
 
-inline int FASTCALL ppc_effective_to_physical(uint32 addr, int flags, uint32 &result)
+int FASTCALL ppc_effective_to_physical(uint32 addr, int flags, uint32 &result)
 {
 	if (flags & PPC_MMU_CODE) {
 		if (!(gCPU.msr & MSR_IR)) {
@@ -399,12 +399,12 @@ bool FASTCALL ppc_mmu_page_create(uint32 ea, uint32 pa)
 	return false;
 }
 
-inline bool FASTCALL ppc_mmu_page_free(uint32 ea)
+bool FASTCALL ppc_mmu_page_free(uint32 ea)
 {
 	return true;
 }
 
-inline int FASTCALL ppc_direct_physical_memory_handle(uint32 addr, byte *&ptr)
+int FASTCALL ppc_direct_physical_memory_handle(uint32 addr, byte *&ptr)
 {
 	if (addr < gMemorySize) {
 		ptr = &gMemory[addr];
@@ -433,7 +433,7 @@ int FASTCALL ppc_direct_effective_memory_handle_code(uint32 addr, byte *&ptr)
 	return r;
 }
 
-inline int FASTCALL ppc_read_physical_qword(uint32 addr, Vector_t &result)
+int FASTCALL ppc_read_physical_qword(uint32 addr, Vector_t &result)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -444,7 +444,7 @@ inline int FASTCALL ppc_read_physical_qword(uint32 addr, Vector_t &result)
 	return io_mem_read128(addr, (uint128 *)&result);
 }
 
-inline int FASTCALL ppc_read_physical_dword(uint32 addr, uint64 &result)
+int FASTCALL ppc_read_physical_dword(uint32 addr, uint64 &result)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -456,7 +456,7 @@ inline int FASTCALL ppc_read_physical_dword(uint32 addr, uint64 &result)
 	return ret;
 }
 
-inline int FASTCALL ppc_read_physical_word(uint32 addr, uint32 &result)
+int FASTCALL ppc_read_physical_word(uint32 addr, uint32 &result)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -468,7 +468,7 @@ inline int FASTCALL ppc_read_physical_word(uint32 addr, uint32 &result)
 	return ret;
 }
 
-inline int FASTCALL ppc_read_physical_half(uint32 addr, uint16 &result)
+int FASTCALL ppc_read_physical_half(uint32 addr, uint16 &result)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -481,7 +481,7 @@ inline int FASTCALL ppc_read_physical_half(uint32 addr, uint16 &result)
 	return ret;
 }
 
-inline int FASTCALL ppc_read_physical_byte(uint32 addr, uint8 &result)
+int FASTCALL ppc_read_physical_byte(uint32 addr, uint8 &result)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -494,7 +494,7 @@ inline int FASTCALL ppc_read_physical_byte(uint32 addr, uint8 &result)
 	return ret;
 }
 
-inline int FASTCALL ppc_read_effective_code(uint32 addr, uint32 &result)
+int FASTCALL ppc_read_effective_code(uint32 addr, uint32 &result)
 {
 	if (addr & 3) {
 		// EXC..bla
@@ -508,7 +508,7 @@ inline int FASTCALL ppc_read_effective_code(uint32 addr, uint32 &result)
 	return r;
 }
 
-inline int FASTCALL ppc_read_effective_qword(uint32 addr, Vector_t &result)
+int FASTCALL ppc_read_effective_qword(uint32 addr, Vector_t &result)
 {
 	uint32 p;
 	int r;
@@ -522,7 +522,7 @@ inline int FASTCALL ppc_read_effective_qword(uint32 addr, Vector_t &result)
 	return r;
 }
 
-inline int FASTCALL ppc_read_effective_dword(uint32 addr, uint64 &result)
+int FASTCALL ppc_read_effective_dword(uint32 addr, uint64 &result)
 {
 	uint32 p;
 	int r;
@@ -547,7 +547,7 @@ inline int FASTCALL ppc_read_effective_dword(uint32 addr, uint64 &result)
 	return r;
 }
 
-inline int FASTCALL ppc_read_effective_word(uint32 addr, uint32 &result)
+int FASTCALL ppc_read_effective_word(uint32 addr, uint32 &result)
 {
 	uint32 p;
 	int r;
@@ -572,7 +572,7 @@ inline int FASTCALL ppc_read_effective_word(uint32 addr, uint32 &result)
 	return r;
 }
 
-inline int FASTCALL ppc_read_effective_half(uint32 addr, uint16 &result)
+int FASTCALL ppc_read_effective_half(uint32 addr, uint16 &result)
 {
 	uint32 p;
 	int r;
@@ -593,7 +593,7 @@ inline int FASTCALL ppc_read_effective_half(uint32 addr, uint16 &result)
 	return r;
 }
 
-inline int FASTCALL ppc_read_effective_byte(uint32 addr, uint8 &result)
+int FASTCALL ppc_read_effective_byte(uint32 addr, uint8 &result)
 {
 	uint32 p;
 	int r;
@@ -603,7 +603,7 @@ inline int FASTCALL ppc_read_effective_byte(uint32 addr, uint8 &result)
 	return r;
 }
 
-inline int FASTCALL ppc_write_physical_qword(uint32 addr, Vector_t data)
+int FASTCALL ppc_write_physical_qword(uint32 addr, Vector_t data)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -618,7 +618,7 @@ inline int FASTCALL ppc_write_physical_qword(uint32 addr, Vector_t data)
 	}
 }
 
-inline int FASTCALL ppc_write_physical_dword(uint32 addr, uint64 data)
+int FASTCALL ppc_write_physical_dword(uint32 addr, uint64 data)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -632,7 +632,7 @@ inline int FASTCALL ppc_write_physical_dword(uint32 addr, uint64 data)
 	}
 }
 
-inline int FASTCALL ppc_write_physical_word(uint32 addr, uint32 data)
+int FASTCALL ppc_write_physical_word(uint32 addr, uint32 data)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -642,7 +642,7 @@ inline int FASTCALL ppc_write_physical_word(uint32 addr, uint32 data)
 	return io_mem_write(addr, ppc_bswap_word(data), 4);
 }
 
-inline int FASTCALL ppc_write_physical_half(uint32 addr, uint16 data)
+int FASTCALL ppc_write_physical_half(uint32 addr, uint16 data)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -652,7 +652,7 @@ inline int FASTCALL ppc_write_physical_half(uint32 addr, uint16 data)
 	return io_mem_write(addr, ppc_bswap_half(data), 2);
 }
 
-inline int FASTCALL ppc_write_physical_byte(uint32 addr, uint8 data)
+int FASTCALL ppc_write_physical_byte(uint32 addr, uint8 data)
 {
 	if (addr < gMemorySize) {
 		// big endian
@@ -662,7 +662,7 @@ inline int FASTCALL ppc_write_physical_byte(uint32 addr, uint8 data)
 	return io_mem_write(addr, data, 1);
 }
 
-inline int FASTCALL ppc_write_effective_qword(uint32 addr, Vector_t data)
+int FASTCALL ppc_write_effective_qword(uint32 addr, Vector_t data)
 {
 	uint32 p;
 	int r;
@@ -675,7 +675,7 @@ inline int FASTCALL ppc_write_effective_qword(uint32 addr, Vector_t data)
 	return r;
 }
 
-inline int FASTCALL ppc_write_effective_dword(uint32 addr, uint64 data)
+int FASTCALL ppc_write_effective_dword(uint32 addr, uint64 data)
 {
 	uint32 p;
 	int r;
@@ -702,7 +702,7 @@ inline int FASTCALL ppc_write_effective_dword(uint32 addr, uint64 data)
 	return r;
 }
 
-inline int FASTCALL ppc_write_effective_word(uint32 addr, uint32 data)
+int FASTCALL ppc_write_effective_word(uint32 addr, uint32 data)
 {
 	uint32 p;
 	int r;
@@ -729,7 +729,7 @@ inline int FASTCALL ppc_write_effective_word(uint32 addr, uint32 data)
 	return r;
 }
 
-inline int FASTCALL ppc_write_effective_half(uint32 addr, uint16 data)
+int FASTCALL ppc_write_effective_half(uint32 addr, uint16 data)
 {
 	uint32 p;
 	int r;
@@ -748,7 +748,7 @@ inline int FASTCALL ppc_write_effective_half(uint32 addr, uint16 data)
 	return r;
 }
 
-inline int FASTCALL ppc_write_effective_byte(uint32 addr, uint8 data)
+int FASTCALL ppc_write_effective_byte(uint32 addr, uint8 data)
 {
 	uint32 p;
 	int r;

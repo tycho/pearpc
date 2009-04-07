@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -438,3 +442,6 @@ SystemDisplay *allocSystemDisplay(const char *title, const DisplayCharacteristic
 	if (gDisplay) return gDisplay;
 	return new Win32Display(title, chr, redraw_ms);
 }
+
+#endif
+

@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <cstdlib>
 
 #include "system/ui/gui.h"
@@ -75,3 +79,5 @@ int sys_gui_messagebox(const String &title, const String &text, int buttons)
 {
 	
 }
+
+#endif

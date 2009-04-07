@@ -18,6 +18,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifndef TARGET_CPU_X86
+
 #include "system/sysvaccel.h"
 
 #include "tools/snprintf.h"
@@ -86,3 +90,6 @@ void sys_convert_display(
 		src += aSrcChar.scanLineLength - aSrcChar.width*aSrcChar.bytesPerPixel;
 	}
 }
+
+#endif
+

@@ -21,7 +21,9 @@
 #ifndef __SYSTEM_ARCH_SYSENDIAN_H__
 #define __SYSTEM_ARCH_SYSENDIAN_H__
 
-#include "config.h"
+#ifndef __included_ppc_stdafx_h
+#error "You need to include stdafx.h in the parent .cc file"
+#endif
 
 #include SYSTEM_ARCH_SPECIFIC_ENDIAN_DIR
 

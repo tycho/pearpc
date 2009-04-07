@@ -23,10 +23,6 @@
 #include <exception>
 #include <unistd.h>
 
-#ifdef __MACH__
-#include <SDL/SDL.h>
-#endif
-
 #include "info.h"
 #include "cpu/cpu.h"
 //#include "cpu_generic/ppc_tools.h"

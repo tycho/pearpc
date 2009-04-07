@@ -19,6 +19,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -62,4 +66,6 @@ bool sys_read_data_from_native_clipboard(void *data, int max_size)
 	CloseClipboard();
 	return true;
 }
+
+#endif
 

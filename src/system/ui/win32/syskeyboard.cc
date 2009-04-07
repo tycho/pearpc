@@ -19,6 +19,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
@@ -72,3 +76,6 @@ SystemKeyboard *allocSystemKeyboard()
 	if (gKeyboard) return NULL;
 	return new WinSystemKeyboard();
 }
+
+#endif
+

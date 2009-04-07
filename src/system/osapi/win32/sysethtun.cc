@@ -21,6 +21,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 // FIXME: What about multiple instances of Win32EthTunDevice?
 
 #include <errno.h>
@@ -380,3 +384,5 @@ EthDevice *createEthernetTunnel()
 {
 	return new Win32EthTunDevice();
 }
+
+#endif

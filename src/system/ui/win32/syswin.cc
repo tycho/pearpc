@@ -19,6 +19,10 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
+#ifdef TARGET_COMPILER_VC
+
 #include <csignal>
 #include <cstdlib>
 #include <cstdio>
@@ -394,3 +398,6 @@ void doneUI()
 	delete gMouse;
 	delete gKeyboard;
 }
+
+#endif
+
