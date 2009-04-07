@@ -13,6 +13,10 @@ scripts/ifppc_up.setuid
 src/debug/debugparse.c
 src/debug/debugparse.h
 src/debug/lex.c
+src/stdafx.h.gch
+src/build_number.h
 src/ppc
 xcode/build
 CMakeCache.txt
+bootfile.dump
+nvram
