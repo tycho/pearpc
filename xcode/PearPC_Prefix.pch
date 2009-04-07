@@ -1,9 +1,0 @@
-//
-// Prefix header for all source files of the 'PearPC' target in the 'PearPC' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif
-
-#define HAVE_CONFIG_H
