@@ -26,6 +26,8 @@
 #  include "config/macosx.h"
 #elif defined TARGET_OS_LINUX
 #  include "config/linux.h"
+#elif defined TARGET_OS_WINDOWS
+#  include "config/windows.h"
 #else
 #  error "No configuration has been set up for your platform."
 #endif

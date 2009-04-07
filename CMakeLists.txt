@@ -114,6 +114,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	endif(NOT CYGWIN)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+if(CYGWIN OR APPLE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DASM_FUNCTION_PREFIX=_")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASM_FUNCTION_PREFIX=_")
+endif(CYGWIN OR APPLE)
+
 # settings for Microsoft Visual C
 IF(MSVC)
    IF(NOT WITH_SHARED_LIBS)
@@ -159,6 +164,10 @@ include_directories (
 	${PearPC_SOURCE_DIR}/src
 	${PearPC_SOURCE_DIR}/contrib/crisscross/source
 	.)
+
+if(MSVC)
+	include_directories(${PearPC_SOURCE_DIR}/contrib/windows)
+endif(MSVC)
 
 add_subdirectory (src)
 add_subdirectory (contrib/crisscross)

@@ -39,7 +39,7 @@
  *	compiler magic
  */
 
-#ifdef __GNUC__
+#ifdef TARGET_COMPILER_GCC
 
 	// FIXME: configure
 #	ifndef __ppc__
@@ -49,11 +49,21 @@
 #	endif
 
 #	define FUNCTION_CONST	__attribute__((const))
-#	define PACKED		__attribute__((packed))
-#	define UNUSED		__attribute__((unused))
-#	define DEPRECATED	__attribute__((deprecated))
-#	define NORETURN		__attribute__((noreturn))
+#	define PACKED			__attribute__((packed))
+#	define UNUSED			__attribute__((unused))
+#	define DEPRECATED		__attribute__((deprecated))
+#	define NORETURN			__attribute__((noreturn))
 #	define ALIGN_STRUCT(n)	__attribute__((aligned(n)))
+#elif defined (TARGET_COMPILER_VC)
+
+#	define FASTCALL			__fastcall
+#	define FUNCTION_CONST
+#	define PACKED
+#	define UNUSED
+#	define DEPRECATED		__declspec(deprecated)
+#	define NORETURN			__declspec(noreturn)
+#	define ALIGN_STRUCT(n)	__declspec(align(n))
+
 #else
 #	error "you're not using the GNU C compiler :-( please add the macros and conditionals for your compiler"
 #endif /* !__GNUC__ */

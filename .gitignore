@@ -8,6 +8,15 @@
 *.perspectivev3
 *Makefile.in
 *Makefile
+*.sln
+*.suo
+*.ncb
+*.vcproj
+*.vcproj.*.user
+*.pdb
+*.idb
+*.dir
+*.rule
 scripts/ifppc_down.setuid
 scripts/ifppc_up.setuid
 src/debug/debugparse.c

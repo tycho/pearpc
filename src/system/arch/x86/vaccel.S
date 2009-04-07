@@ -18,17 +18,17 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef PREFIX
-#define PREFIX
+#ifndef ASM_FUNCTION_PREFIX
+#define ASM_FUNCTION_PREFIX
 #endif
 
 #ifdef TARGET_CPU_X86
 
-#define EXPORT(sym) EXPORT2(PREFIX, sym)
+#define EXPORT(sym) EXPORT2(ASM_FUNCTION_PREFIX, sym)
 #define EXPORT2(p, sym) EXPORT3(p, sym)
 #define EXPORT3(p, sym) .globl p##sym; p##sym
 
-#define EXTERN(sym) EXTERN2(PREFIX, sym)
+#define EXTERN(sym) EXTERN2(ASM_FUNCTION_PREFIX, sym)
 #define EXTERN2(p, sym) EXTERN3(p, sym)
 #define EXTERN3(p, sym) p##sym
 
