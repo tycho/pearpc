@@ -156,6 +156,8 @@ include_directories (
 	${PearPC_BINARY_DIR}
 	${PearPC_BINARY_DIR}/src
 	${PearPC_SOURCE_DIR}/src
+	${PearPC_SOURCE_DIR}/contrib/crisscross/source
 	.)
 
 add_subdirectory (src)
+add_subdirectory (contrib/crisscross)
