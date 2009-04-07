@@ -1892,6 +1892,7 @@ void receive_atapi_packet()
 			}
 			switch (mpIDEState->state[mpIDEState->drive].current_command) {
 			case IDE_COMMAND_IDENT_ATAPI:
+				{
 //				IO_IDE_WARN("READ: IDE_COMMAND_IDENT_ATAPI\n");
 				uint32 pos = makeLogical(mpIDEState->drive_head & 0xf, mpIDEState->state[mpIDEState->drive].cyl, mpIDEState->state[mpIDEState->drive].sector_no);
 				IO_IDE_TRACE(" read sector cont. (%08x, %d)\n", pos, mpIDEState->state[mpIDEState->drive].sector_count);
@@ -1902,6 +1903,7 @@ void receive_atapi_packet()
 				dev->readBlock(mpIDEState->state[mpIDEState->drive].sector);
 				dev->release();
 				raiseInterrupt(0);
+				}
 				break;
 			default:
 				return;
