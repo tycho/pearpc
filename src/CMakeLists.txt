@@ -43,9 +43,6 @@ add_dependencies(ppc-common PearPCBuildNumber)
 add_dependencies(cpu-jitc PearPCBuildNumber)
 add_dependencies(cpu-generic PearPCBuildNumber)
 
-add_dependencies(ppc-common DebuggerLexer)
-add_dependencies(ppc-common DebuggerParser)
-
 IF(NOT WIN32)
 	target_link_libraries(ppc-jitc pthread)
 	target_link_libraries(ppc-generic pthread)
