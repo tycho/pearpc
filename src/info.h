@@ -21,13 +21,14 @@
 #ifndef __INFO_H__
 #define __INFO_H__
 
+#include "build_number.h"
+
 #define APPNAME "PearPC"
-#define APPVERSION "0.5pre"
-// this will show up in the win32 version resource:
-#define APPVERSION_IN_NUMBERS 0,0,5,0
+#define APPVERSION PPC_VERSION_STRING
+#define APPVERSION_IN_NUMBERS PPC_RESOURCE_VERSION
+#define COPYRIGHT "(c) 2003-2005 Sebastian Biallas <sb@biallas.net>, (c) 2009 Steven Noonan <steven@uplinklabs.net"
 
 #define EMULATOR_MODEL "PowerPC ("APPNAME" "APPVERSION")"
-#define COPYRIGHT "(c) 2003-2005 Sebastian Biallas <sb@biallas.net>"
 
 //#define PPC_CPU_ENABLE_SINGLESTEP
 
