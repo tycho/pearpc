@@ -119,11 +119,12 @@
 /* Location of system/arch/$ARCH_DIR/sysfeatures.h */
 #define SYSTEM_ARCH_SPECIFIC_FEATURES_DIR "system/arch/x86/sysfeatures.h"
 
-/* Location of system/osapi/$OSAPI_DIR/types.h */
-#define SYSTEM_OSAPI_SPECIFIC_TYPES_HDR "system/osapi/posix/types.h"
 #else
 #error "TODO"
 #endif
+
+/* Location of system/osapi/$OSAPI_DIR/types.h */
+#define SYSTEM_OSAPI_SPECIFIC_TYPES_HDR "system/osapi/posix/types.h"
 
 /* Which signal to use for clock timer */
 #define SYSTIMER_SIGNAL SIGALRM

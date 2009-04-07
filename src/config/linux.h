@@ -113,17 +113,25 @@
 #define STDC_HEADERS 1
 
 #ifdef TARGET_CPU_X86
+
 /* Location of system/arch/$ARCH_DIR/sysendian.h */
 #define SYSTEM_ARCH_SPECIFIC_ENDIAN_DIR "system/arch/x86/sysendian.h"
 
 /* Location of system/arch/$ARCH_DIR/sysfeatures.h */
 #define SYSTEM_ARCH_SPECIFIC_FEATURES_DIR "system/arch/x86/sysfeatures.h"
 
+#else
+
+/* Location of system/arch/$ARCH_DIR/sysendian.h */
+#define SYSTEM_ARCH_SPECIFIC_ENDIAN_DIR "system/arch/generic/sysendian.h"
+
+/* Location of system/arch/$ARCH_DIR/sysfeatures.h */
+#define SYSTEM_ARCH_SPECIFIC_FEATURES_DIR "system/arch/generic/sysfeatures.h"
+
+#endif
+
 /* Location of system/osapi/$OSAPI_DIR/types.h */
 #define SYSTEM_OSAPI_SPECIFIC_TYPES_HDR "system/osapi/posix/types.h"
-#else
-#error "TODO"
-#endif
 
 /* Which signal to use for clock timer */
 #define SYSTIMER_SIGNAL SIGALRM
