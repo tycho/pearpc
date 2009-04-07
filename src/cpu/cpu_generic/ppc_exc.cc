@@ -24,6 +24,8 @@
  *		Programming Environments Manual
  */
 
+#include "stdafx.h"
+
 #include "tools/snprintf.h"
 #include "debug/tracers.h"
 #include "cpu/debug.h"

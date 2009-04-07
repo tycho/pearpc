@@ -31,6 +31,8 @@
  *	[1] http://bbc.nvg.org/doc/datasheets/R6522_r9.zip
  */
 
+#include "stdafx.h"
+
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>

@@ -18,6 +18,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #include "x86opc.h"
 
 /* 	Percent tokens in strings:

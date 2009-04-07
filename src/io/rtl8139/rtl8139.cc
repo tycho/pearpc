@@ -28,6 +28,8 @@
  *	FIXME: Implement EthTunDriver write frame prefixing
  */
 
+#include "stdafx.h"
+
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>

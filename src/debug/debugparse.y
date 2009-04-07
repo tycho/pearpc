@@ -1,7 +1,8 @@
-
 %pure_parser
 
 %{
+
+#include "stdafx.h"
 
 #define YYPARSE_PARAM resultptr
 

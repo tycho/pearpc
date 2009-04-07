@@ -20,6 +20,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #include "debug/tracers.h"
 #include "system/arch/sysendian.h"
 #include "io/pci/pci.h"

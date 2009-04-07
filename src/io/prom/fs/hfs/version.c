@@ -18,7 +18,9 @@
  *
  */
 
-# include "version.h"
+#include "stdafx.h"
+
+#include "version.h"
 
 const char libhfs_version[]   = "libhfs version 3.2.6";
 const char libhfs_copyright[] = "Copyright (C) 1996-1998 Robert Leslie";

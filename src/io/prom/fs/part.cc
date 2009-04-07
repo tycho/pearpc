@@ -26,6 +26,8 @@
 // for HFS-MDB info:
 // http://developer.apple.com/documentation/Carbon/Reference/File_Manager/file_manager/data_type_62.html
 
+#include "stdafx.h"
+
 #include <cstring>
 
 #include "debug/tracers.h"

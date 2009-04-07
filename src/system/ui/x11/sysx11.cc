@@ -19,6 +19,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include <sys/time.h>

@@ -19,6 +19,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #include <cctype>
 #include <cstdlib>
 #include <cstring>

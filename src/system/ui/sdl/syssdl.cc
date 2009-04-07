@@ -20,6 +20,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #ifdef __MACH__
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>

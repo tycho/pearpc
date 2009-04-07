@@ -25,6 +25,8 @@
  *		Programming Environments Manual
  */
 
+#include "stdafx.h"
+
 #include <cstdlib>
 #include <cstring>
 #include "system/arch/sysendian.h"

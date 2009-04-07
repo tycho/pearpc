@@ -20,7 +20,9 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "cstring"
+#include "stdafx.h"
+
+#include <cstring>
 
 #include "system/types.h"
 #include "cpu/debug.h"

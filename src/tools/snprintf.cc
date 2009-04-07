@@ -62,6 +62,8 @@
  *    * added '%b' for formatting in binary notation.
  **************************************************************/
 
+#include "stdafx.h"
+
 #include <cctype>
 #include <cstring>
 #include <cstdlib>

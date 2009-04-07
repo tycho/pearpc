@@ -3,6 +3,8 @@
  *
  */
 
+#include "stdafx.h"
+
 #include "crc32.h"
 
 static const uint32 crc32table[0x100] = {

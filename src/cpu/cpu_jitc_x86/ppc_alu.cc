@@ -18,6 +18,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "stdafx.h"
+
 #include "debug/tracers.h"
 #include "ppc_alu.h"
 #include "ppc_dec.h"
