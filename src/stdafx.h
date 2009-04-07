@@ -22,8 +22,12 @@
 
 #include "platform_detect.h"
 
-#ifdef TARGET_OS_MACOSX
-#include "config/macosx.h"
+#if defined   TARGET_OS_MACOSX
+#  include "config/macosx.h"
+#elif defined TARGET_OS_LINUX
+#  include "config/linux.h"
+#else
+#  error "No configuration has been set up for your platform."
 #endif
 
 #endif

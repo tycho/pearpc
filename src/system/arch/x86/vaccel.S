@@ -19,7 +19,7 @@
  */
 
 #ifndef PREFIX
-#define PREFIX _
+#define PREFIX
 #endif
 
 #define EXPORT(sym) EXPORT2(PREFIX, sym)
