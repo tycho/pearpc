@@ -1,0 +1,3 @@
+[submodule "contrib/crisscross"]
+	path = contrib/crisscross
+	url = git://github.com/tycho/crisscross.git
