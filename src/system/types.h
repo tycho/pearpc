@@ -95,4 +95,6 @@ union double_uint64 {
 	double d;
 };
 
+typedef unsigned long ulong;
+
 #endif

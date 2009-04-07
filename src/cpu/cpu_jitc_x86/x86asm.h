@@ -816,26 +816,26 @@ static inline modrm_p x86_mem2_r(modrm_o modrm, NativeReg reg, uint32 disp)
 	}
 }
 
-static inline modrm_p x86_mem2(modrm_o modrm, NativeReg reg, uint32 disp=0)
+static inline modrm_p x86_mem2(modrm_o modrm, NativeReg reg, ulong disp=0)
 {		
 	if (reg == REG_NO) {
 		modrm[0] = 5;
 		modrm[1] = 0x05;
-		*((uint32 *)&modrm[2]) = disp;
+		*((ulong *)&modrm[2]) = disp;
 		return modrm;
 	} else return x86_mem2_r(modrm, reg, disp);
 }
 
 static inline modrm_p x86_mem2(modrm_o modrm, NativeReg reg, const void *disp)
 {		
-	return x86_mem2(modrm, reg, (uint32)disp);
+	return x86_mem2(modrm, reg, (ulong)disp);
 }
 
 static inline modrm_p x86_mem2(modrm_o modrm, const void *disp)
 {		
 	modrm[0] = 5;
 	modrm[1] = 0x05;
-	*((uint32 *)&modrm[2]) = (uint32)disp;
+	*((ulong *)&modrm[2]) = (ulong)disp;
 	return modrm;
 }
 

@@ -22,6 +22,8 @@
 #define PREFIX
 #endif
 
+#ifdef TARGET_CPU_X86
+
 #define EXPORT(sym) EXPORT2(PREFIX, sym)
 #define EXPORT2(p, sym) EXPORT3(p, sym)
 #define EXPORT3(p, sym) .globl p##sym; p##sym
@@ -420,4 +422,7 @@ EXPORT(x86_sse2_convert_2be555_to_4le888):
 	jnz		1b
 2:
 	ret
+
+
+#endif
 

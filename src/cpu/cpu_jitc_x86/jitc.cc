@@ -113,7 +113,7 @@ bool FASTCALL jitcEmitAssure(int size)
 void FASTCALL jitcEmitAlign(int align)
 {
 	do {
-		int missalign = ((uint)gJITC.currentPage->tcp) % align;
+		int missalign = ((ulong)gJITC.currentPage->tcp) % align;
 		if (missalign) {
 			int bytes = align - missalign;
 			if ((gJITC.currentPage->bytesLeft - bytes) < 5) {
