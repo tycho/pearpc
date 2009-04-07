@@ -106,7 +106,7 @@ MACRO(ADD_FLAG where flag)
 ENDMACRO(ADD_FLAG)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=gnu++98 -fno-common -fno-strict-aliasing -fno-rtti -Wall -Wundef -Wno-long-long")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=gnu++98 -fno-common -fno-strict-aliasing -Wall -Wundef -Wno-long-long")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/opt/local/lib -lX11")
 	if(NOT CYGWIN)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb")
