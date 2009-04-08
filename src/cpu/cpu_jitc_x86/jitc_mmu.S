@@ -18,15 +18,15 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef PREFIX
-#define PREFIX
+#ifndef ASM_FUNCTION_PREFIX
+#define ASM_FUNCTION_PREFIX
 #endif
 
-#define EXPORT(sym) EXPORT2(PREFIX, sym)
+#define EXPORT(sym) EXPORT2(ASM_FUNCTION_PREFIX, sym)
 #define EXPORT2(p, sym) EXPORT3(p, sym)
 #define EXPORT3(p, sym) .globl p##sym; p##sym
 
-#define EXTERN(sym) EXTERN2(PREFIX, sym)
+#define EXTERN(sym) EXTERN2(ASM_FUNCTION_PREFIX, sym)
 #define EXTERN2(p, sym) EXTERN3(p, sym)
 #define EXTERN3(p, sym) p##sym
 
@@ -37,10 +37,10 @@
 
 #define TLB_ENTRIES 32
 
-#	Define this if you want exact handling of the SO bit.
+## Define this if you want exact handling of the SO bit.
 /* #define EXACT_SO */
 
-STRUCT    #PPC_CPU_State
+STRUCT    ##PPC_CPU_State
 	MEMBER(dummy, 4)
 	MEMBER(gpr, 32*4)
 	MEMBER(fpr, 32*8)
@@ -117,7 +117,7 @@ STRUCT    #PPC_CPU_State
 	MEMBER(pc_ofs, 4)
 	MEMBER(current_code_base, 4)
 
-STRUCT	#JITC
+STRUCT	##JITC
 	MEMBER(clientPages, 4)
 	MEMBER(tlb_code_0_eff, TLB_ENTRIES*4)
 	MEMBER(tlb_data_0_eff, TLB_ENTRIES*4)
@@ -158,7 +158,7 @@ STRUCT	#JITC
 	
 	MEMBER(translationCache, 4)
 
-STRUCT	#ClientPage
+STRUCT	##ClientPage
 	MEMBER(entrypoints, 1024*4)
 	MEMBER(baseaddress, 4)
 	MEMBER(tcf_current, 4)
@@ -350,25 +350,25 @@ ppc_pte_protection:
 ##############################################################################################
 ##	protection_fault_%2_%3
 protection_fault_0_code:
-	# ppc_exception(PPC_EXC_ISI, PPC_EXC_SRR1_PROT, addr);
-	pop	%edx		# return address is no longer needed
-	pop	%ebx		# bytes to roll back
+	## ppc_exception(PPC_EXC_ISI, PPC_EXC_SRR1_PROT, addr);
+	pop	%edx		## return address is no longer needed
+	pop	%ebx		## bytes to roll back
 	add	%esp, %ebx
-	mov	%ecx, (1<<27)	# PPC_EXC_SRR1_PROT
+	mov	%ecx, (1<<27)	## PPC_EXC_SRR1_PROT
 	jmp	EXTERN(ppc_isi_exception_asm)
 protection_fault_0_data:
-	# ppc_exception(PPC_EXC_DSI, PPC_EXC_DSISR_PROT, addr);
-	pop	%edx		# return address is no longer needed
-	pop	%ebx		# bytes to roll back
+	## ppc_exception(PPC_EXC_DSI, PPC_EXC_DSISR_PROT, addr);
+	pop	%edx		## return address is no longer needed
+	pop	%ebx		## bytes to roll back
 	add	%esp, %ebx
-	mov	%ecx, (1<<27)	# PPC_EXC_DSISR_PROT
+	mov	%ecx, (1<<27)	## PPC_EXC_DSISR_PROT
 	jmp	EXTERN(ppc_dsi_exception_asm)
 protection_fault_8_data:
-	# ppc_exception(PPC_EXC_DSI, PPC_EXC_DSISR_PROT | PPC_EXC_DSISR_STORE, addr);
-	pop	%edx			# return address is no longer needed
-	pop	%ebx			# bytes to roll back
+	## ppc_exception(PPC_EXC_DSI, PPC_EXC_DSISR_PROT | PPC_EXC_DSISR_STORE, addr);
+	pop	%edx			## return address is no longer needed
+	pop	%ebx			## bytes to roll back
 	add	%esp, %ebx
-	mov	%ecx, (1<<27) | (1<<25)	# PPC_EXC_DSISR_PROT | PPC_EXC_DSISR_STORE
+	mov	%ecx, (1<<27) | (1<<25)	## PPC_EXC_DSISR_PROT | PPC_EXC_DSISR_STORE
 	jmp	EXTERN(ppc_dsi_exception_asm)
 
 ##############################################################################################
@@ -380,7 +380,7 @@ protection_fault_8_data:
 	shr	%edx, 12;                                                      \
 	and	%ecx, 0xfffff000;                                              \
 	and	%edx, TLB_ENTRIES-1;                                           \
-	cmp	%ecx, [gJITC(tlb_##datacode##_##rw##_eff + %edx*4)];           \
+	cmp	%ecx, [gJITC(tlb_##datacode##_##rw##_eff + %edx*4)];		\
 	jne	1f;                                                            \
 	/*                                                                     \
 	 *	if a tlb entry is invalid, its                                 \
@@ -415,7 +415,7 @@ ppc_effective_to_physical_code_ret:
 EXPORT(ppc_effective_to_physical_code):
 	tlb_lookup(0, code)
 
-	test	byte ptr [gCPU(msr)], (1<<5)	# MSR_IR
+	test	byte ptr [gCPU(msr)], (1<<5)	## MSR_IR
 	jz	ppc_effective_to_physical_code_ret
 
 	bat_lookup(i, 0, 0, code)
@@ -424,12 +424,12 @@ EXPORT(ppc_effective_to_physical_code):
 	bat_lookup(i, 3, 0, code)
 
 	mov	%ebx, %eax
-	shr	%ebx, 28			# SR
+	shr	%ebx, 28			## SR
 	mov	%edx, [gCPU(sr+4*%ebx)]
 	
-	# test	%edx, SR_T --> die
+	## test	%edx, SR_T --> die
 	
-	test	%edx, (1<<28)			# SR_N
+	test	%edx, (1<<28)			## SR_N
 	jnz	9f
 	
 	mov	%ebx, %eax
@@ -441,24 +441,24 @@ EXPORT(ppc_effective_to_physical_code):
 	and	%ebp, 0xffffff
 	and	%edi, 0x3f
 	
-	# now:
-	# %eax = addr
-	# %ebx = page_index
-	# %ebp = VSID
-	# %edi = api
+	## now:
+	## %eax = addr
+	## %ebx = page_index
+	## %ebp = VSID
+	## %edi = api
 	
 	xor	%ebx, %ebp
 	
-	# %ebx = hash1
+	## %ebx = hash1
 	
 	push	%eax
-	push	%ebx			# das brauch ich
+	push	%ebx			## das brauch ich
 	
 	and	%ebx, [gCPU(pagetable_hashmask)]
 	shl	%ebx, 6
 	or	%ebx, [gCPU(pagetable_base)]
 	
-	# %ebx = pteg_addr
+	## %ebx = pteg_addr
 	
 	pg_table_lookup(0, 0, code, 0)
 	pg_table_lookup(0, 0, code, 8)
@@ -469,7 +469,7 @@ EXPORT(ppc_effective_to_physical_code):
 	pg_table_lookup(0, 0, code, 48)
 	pg_table_lookup(0, 0, code, 56)
 	
-	# hash function number 2
+	## hash function number 2
 	pop	%ebx
 	not	%ebx
 	and	%ebx, [gCPU(pagetable_hashmask)]
@@ -485,22 +485,22 @@ EXPORT(ppc_effective_to_physical_code):
 	pg_table_lookup(1<<6, 0, code, 48)
 	pg_table_lookup(1<<6, 0, code, 56)
 
-	# page lookup failed --> throw exception
+	## page lookup failed --> throw exception
 	
 	pop	%eax
-	pop	%edx			# return address is no longer needed
-	pop	%ecx			# bytes to roll back
+	pop	%edx			## return address is no longer needed
+	pop	%ecx			## bytes to roll back
 	add	%esp, %ecx
 
-	mov	%ecx, (1<<30)		# PPC_EXC_SRR1_PAGE
+	mov	%ecx, (1<<30)		## PPC_EXC_SRR1_PAGE
 	jmp	EXTERN(ppc_isi_exception_asm)
 9:
-	# segment isnt executable --> throw exception
-	pop	%edx			# return address is no longer needed
-	pop	%ecx			# bytes to roll back
+	## segment isnt executable --> throw exception
+	pop	%edx			## return address is no longer needed
+	pop	%ecx			## bytes to roll back
 	add	%esp, %ecx
 
-	mov	%ecx, (1<<28)		# PPC_EXC_SRR1_GUARD
+	mov	%ecx, (1<<28)		## PPC_EXC_SRR1_GUARD
 	jmp	EXTERN(ppc_isi_exception_asm)
 
 .balign 16
@@ -525,7 +525,7 @@ ppc_effective_to_physical_data_read_ret:
 ppc_effective_to_physical_data_read:
 	tlb_lookup(0, data)
 
-	test	byte ptr [gCPU(msr)], (1<<4)	# MSR_DR
+	test	byte ptr [gCPU(msr)], (1<<4)	## MSR_DR
 	jz	ppc_effective_to_physical_data_read_ret
 	                        
 	bat_lookup(d, 0, 0, data)
@@ -534,10 +534,10 @@ ppc_effective_to_physical_data_read:
 	bat_lookup(d, 3, 0, data)
 
 	mov	%ebx, %eax
-	shr	%ebx, 28			# SR
+	shr	%ebx, 28			## SR
 	mov	%edx, [gCPU(sr+4*%ebx)]
 	
-	# test %edx, SR_T --> die
+	## test %edx, SR_T --> die
 	
 	mov	%ebx, %eax
 	mov	%ebp, %edx
@@ -548,15 +548,15 @@ ppc_effective_to_physical_data_read:
 	and	%ebp, 0xffffff
 	and	%edi, 0x3f
 	
-	# now:
-	# %eax = addr
-	# %ebx = page_index
-	# %ebp = VSID
-	# %edi = api
+	## now:
+	## %eax = addr
+	## %ebx = page_index
+	## %ebp = VSID
+	## %edi = api
 	
 	xor	%ebx, %ebp
 	
-	# %ebx = hash1
+	## %ebx = hash1
 	
 	push	%eax
 	push	%ebx			# das brauch ich
@@ -565,7 +565,7 @@ ppc_effective_to_physical_data_read:
 	shl	%ebx, 6
 	or	%ebx, [gCPU(pagetable_base)]
 	
-	# %ebx = pteg_addr
+	## %ebx = pteg_addr
 	
 	pg_table_lookup(0, 0, data, 0)
 	pg_table_lookup(0, 0, data, 8)
@@ -576,7 +576,7 @@ ppc_effective_to_physical_data_read:
 	pg_table_lookup(0, 0, data, 48)
 	pg_table_lookup(0, 0, data, 56)
 	
-	# hash function number 2
+	## hash function number 2
 	pop	%ebx
 	not	%ebx
 	and	%ebx, [gCPU(pagetable_hashmask)]
@@ -592,14 +592,14 @@ ppc_effective_to_physical_data_read:
 	pg_table_lookup(1<<6, 0, data, 48)
 	pg_table_lookup(1<<6, 0, data, 56)
 
-	# page lookup failed --> throw exception
+	## page lookup failed --> throw exception
 	
 	pop	%eax
-	pop	%edx			# return address is no longer needed
-	pop	%ecx			# bytes to roll back
+	pop	%edx			## return address is no longer needed
+	pop	%ecx			## bytes to roll back
 	add	%esp, %ecx
 	
-	mov	%ecx, (1<<30)		# PPC_EXC_DSISR_PAGE
+	mov	%ecx, (1<<30)		## PPC_EXC_DSISR_PAGE
 	jmp	EXTERN(ppc_dsi_exception_asm)
 
 .balign 16
@@ -624,7 +624,7 @@ ppc_effective_to_physical_data_write_ret:
 ppc_effective_to_physical_data_write:
 	tlb_lookup(8, data)
 
-	test	byte ptr [gCPU(msr)], (1<<4)	# MSR_DR
+	test	byte ptr [gCPU(msr)], (1<<4)	## MSR_DR
 	jz	ppc_effective_to_physical_data_write_ret
 	
 	bat_lookup(d, 0, 8, data)
@@ -633,10 +633,10 @@ ppc_effective_to_physical_data_write:
 	bat_lookup(d, 3, 8, data)
 
 	mov	%ebx, %eax
-	shr	%eax, 28			# SR
+	shr	%eax, 28			## SR
 	mov	%edx, [gCPU(sr+4*%eax)]
 	
-	# test %edx, SR_T --> die
+	## test %edx, SR_T --> die
 	
 	mov	%eax, %ebx
 	mov	%edi, %ebx
@@ -647,24 +647,24 @@ ppc_effective_to_physical_data_write:
 	and	%ebp, 0xffffff
 	and	%edi, 0x3f
 	
-	# now:
-	# %eax = addr
-	# %ebx = page_index
-	# %ebp = VSID
-	# %edi = api
+	## now:
+	## %eax = addr
+	## %ebx = page_index
+	## %ebp = VSID
+	## %edi = api
 	
 	xor	%ebx, %ebp
 	
-	# %ebx = hash1
+	## %ebx = hash1
 	
 	push	%eax
-	push	%ebx			# das brauch ich
+	push	%ebx			## das brauch ich
 	
 	and	%ebx, [gCPU(pagetable_hashmask)]
 	shl	%ebx, 6
 	or	%ebx, [gCPU(pagetable_base)]
 	
-	# %ebx = pteg_addr
+	## %ebx = pteg_addr
 	
 	pg_table_lookup(0, 8, data, 0)
 	pg_table_lookup(0, 8, data, 8)
@@ -675,7 +675,7 @@ ppc_effective_to_physical_data_write:
 	pg_table_lookup(0, 8, data, 48)
 	pg_table_lookup(0, 8, data, 56)
 	
-	# hash function number 2
+	## hash function number 2
 	mov	%ebx, [%esp]
 	add	%esp, 4
 	not	%ebx
@@ -692,14 +692,14 @@ ppc_effective_to_physical_data_write:
 	pg_table_lookup(1<<6, 8, data, 48)
 	pg_table_lookup(1<<6, 8, data, 56)
 
-	# page lookup failed --> throw exception
+	## page lookup failed --> throw exception
 	
 	pop	%eax
-	pop	%edx			# return address is no longer needed
-	pop	%ebx			# bytes to roll back
+	pop	%edx			## return address is no longer needed
+	pop	%ebx			## bytes to roll back
 	add	%esp, %ebx
 
-	mov	%ecx, (1<<30)|(1<<25)	# PPC_EXC_DSISR_PAGE | PPC_EXC_DSISR_STORE
+	mov	%ecx, (1<<30)|(1<<25)	## PPC_EXC_DSISR_PAGE | PPC_EXC_DSISR_STORE
 	jmp	EXTERN(ppc_dsi_exception_asm)
 
 .balign 16
@@ -716,7 +716,7 @@ EXPORT(ppc_write_effective_byte_asm):
 	mov	[gCPU(pc_ofs)], %esi
 
 	push	%edx
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	cmp	%eax, [EXTERN(gMemorySize)]
 	pop	%edx
@@ -747,7 +747,7 @@ EXPORT(ppc_write_effective_half_asm):
 	jae	1f
 
 	push	%edx
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	cmp	%eax, [EXTERN(gMemorySize)]
 	pop	%edx
@@ -765,13 +765,13 @@ EXPORT(ppc_write_effective_half_asm):
 1:
 	push	%edx
 	push	%eax
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	mov	%ebx, %eax
 	pop	%eax
 	push	%ebx
 	inc	%eax
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	pop	%ebx
 	pop	%edx
@@ -821,7 +821,7 @@ EXPORT(ppc_write_effective_word_asm):
 	bswap	%edx
 
 	push	%edx
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	cmp	%eax, [EXTERN(gMemorySize)]
 	pop	%edx
@@ -837,13 +837,13 @@ EXPORT(ppc_write_effective_word_asm):
 1:
 	push	%edx
 	push	%eax
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	mov	%ebx, %eax
 	pop	%eax
 	add	%eax, 4
 	push	%ebx
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	pop	%ebx
 	pop	%edx
@@ -880,7 +880,7 @@ EXPORT(ppc_write_effective_word_asm):
 	1:
 		rol	%edx, 8
 		push	%ebp
-		#push	%ebx
+		##push	%ebx
 		push	%edx
 		movzx	%edx, %dl
 		mov	%eax, %ebx
@@ -924,14 +924,14 @@ EXPORT(ppc_write_effective_dword_asm):
 	mov	%ebx, %eax
 	and	%ebx, 0xfff
 	cmp	%ebx, 4089
-	jae	2f			# overlap
+	jae	2f			## overlap
 
 	bswap	%ecx
 	bswap	%edx
 
 	push	%ecx
 	push	%edx
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	cmp	%eax, [EXTERN(gMemorySize)]
 	pop	%edx
@@ -951,13 +951,13 @@ EXPORT(ppc_write_effective_dword_asm):
 	push	%ecx
 	push	%edx
 	push	%eax
-	push	16			# roll back 16 bytes in case of exception
+	push	16			## roll back 16 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	mov	%ebx, %eax
 	pop	%eax
 	add	%eax, 8
 	push	%ebx
-	push	16			# roll back 16 bytes in case of exception
+	push	16			## roll back 16 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 	pop	%ebx
 	pop	%edx
@@ -1035,7 +1035,7 @@ EXPORT(ppc_write_effective_qword_asm):
 	and	%eax, 0xfffffff0
 	push	%edx
 
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1068,7 +1068,7 @@ ppc_write_effective_qword_sse_asm:
 	and	%eax, 0xfffffff0
 	push	%edx
 
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_write
 
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1097,7 +1097,7 @@ ppc_write_effective_qword_sse_asm:
 EXPORT(ppc_read_effective_byte_asm):
 	mov	[gCPU(pc_ofs)], %esi
 
-	push	4			# roll back 4 bytes in case of exception
+	push	4			## roll back 4 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	1f
@@ -1128,7 +1128,7 @@ EXPORT(ppc_read_effective_half_z_asm):
 	cmp	%ebx, 4095
 	jae	1f
 
-	push	4			# roll back 4 bytes in case of exception
+	push	4			## roll back 4 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	2f
@@ -1145,7 +1145,7 @@ EXPORT(ppc_read_effective_half_z_asm):
 
 1:
 	push	%eax
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	xor	%edx, %edx
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1156,7 +1156,7 @@ EXPORT(ppc_read_effective_half_z_asm):
 	pop	%eax
 	push	%edx
 	inc	%eax
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%edx
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1198,7 +1198,7 @@ EXPORT(ppc_read_effective_half_s_asm):
 	cmp	%ebx, 4095
 	jae	1f
 
-	push	4			# roll back 4 bytes in case of exception
+	push	4			## roll back 4 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	2f
@@ -1216,7 +1216,7 @@ EXPORT(ppc_read_effective_half_s_asm):
 
 1:
 	push	%eax
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	2f
@@ -1226,7 +1226,7 @@ EXPORT(ppc_read_effective_half_s_asm):
 	pop	%eax
 	push	%ecx
 	inc	%eax
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%ecx
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1271,7 +1271,7 @@ EXPORT(ppc_read_effective_word_asm):
 	cmp	%ebx, 4093
 	jae	1f
 
-	push	4			# roll back 4 bytes in case of exception
+	push	4			## roll back 4 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	2f
@@ -1288,7 +1288,7 @@ EXPORT(ppc_read_effective_word_asm):
 1:
 	push	%eax
 	push	%ebx
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%ebx
 	mov	%ecx, 4096
@@ -1308,7 +1308,7 @@ EXPORT(ppc_read_effective_word_asm):
 	add	%eax, 4
 	push	%ebx
 	and	%eax, 0xfffff000
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%ebx
 	pop	%edx
@@ -1368,7 +1368,7 @@ EXPORT(ppc_read_effective_dword_asm):
 	cmp	%ebx, 4089
 	jae	1f
 
-	push	4			# roll back 4 bytes in case of exception
+	push	4			## roll back 4 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	jae	2f
@@ -1389,7 +1389,7 @@ EXPORT(ppc_read_effective_dword_asm):
 1:
 	push	%eax
 	push	%ebx
-	push	12			# roll back 12 bytes in case of exception
+	push	12			## roll back 12 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%ebx
 	mov	%ebp, 4096
@@ -1411,7 +1411,7 @@ EXPORT(ppc_read_effective_dword_asm):
 	add	%eax, 8
 	push	%ebx
 	and	%eax, 0xfffff000
-	push	16			# roll back 16 bytes in case of exception
+	push	16			## roll back 16 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 	pop	%ebx
 	pop	%edx
@@ -1472,7 +1472,7 @@ EXPORT(ppc_read_effective_qword_asm):
 	and	%eax, 0xfffffff0
 	push	%edx
 
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1505,7 +1505,7 @@ EXPORT(ppc_read_effective_qword_sse_asm):
 	and	%eax, 0xfffffff0
 	push	%edx
 
-	push	8			# roll back 8 bytes in case of exception
+	push	8			## roll back 8 bytes in case of exception
 	call	ppc_effective_to_physical_data_read
 
 	cmp	%eax, [EXTERN(gMemorySize)]
@@ -1583,7 +1583,7 @@ EXPORT(ppc_opc_stswi_asm):
 		push	%ebx
 		push	%edi
 		push	%edx
-		push	24			# roll back 24 bytes in case of exception
+		push	24			## roll back 24 bytes in case of exception
 		call	ppc_effective_to_physical_data_write
 		cmp	%eax, [EXTERN(gMemorySize)]
 		pop	%edx
@@ -1639,7 +1639,7 @@ EXPORT(ppc_opc_lswi_asm):
 		push	%ebx
 		push	%edi
 		push	%edx
-		push	24			# roll back 24 bytes in case of exception
+		push	24			## roll back 24 bytes in case of exception
 		call	ppc_effective_to_physical_data_read
 		pop	%edx
 		cmp	%eax, [EXTERN(gMemorySize)]
@@ -1685,8 +1685,8 @@ EXPORT(ppc_opc_lswi_asm):
 ##	IN	%eax: effective address
 EXPORT(ppc_opc_icbi_asm):
 	mov	[gCPU(pc_ofs)], %esi
-	push	4			# roll back 4 bytes in case of exception
-	add	%eax, 1			# FIXME: WTF???
+	push	4			## roll back 4 bytes in case of exception
+	add	%eax, 1			## FIXME: WTF???
 	call	ppc_effective_to_physical_data_read
 	cmp	%eax, [EXTERN(gMemorySize)]
 	mov	%ebp, [gJITC(clientPages)]

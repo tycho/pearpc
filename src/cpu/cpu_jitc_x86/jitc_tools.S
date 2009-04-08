@@ -19,15 +19,15 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef PREFIX
-#define PREFIX
+#ifndef ASM_FUNCTION_PREFIX
+#define ASM_FUNCTION_PREFIX
 #endif
 
-#define EXPORT(sym) EXPORT2(PREFIX, sym)
+#define EXPORT(sym) EXPORT2(ASM_FUNCTION_PREFIX, sym)
 #define EXPORT2(p, sym) EXPORT3(p, sym)
 #define EXPORT3(p, sym) .globl p##sym; p##sym
 
-#define EXTERN(sym) EXTERN2(PREFIX, sym)
+#define EXTERN(sym) EXTERN2(ASM_FUNCTION_PREFIX, sym)
 #define EXTERN2(p, sym) EXTERN3(p, sym)
 #define EXTERN3(p, sym) p##sym
 
@@ -36,10 +36,10 @@
 
 .intel_syntax prefix
 
-#	Define this if you want exact handling of the SO bit.
+##	Define this if you want exact handling of the SO bit.
 /* #define EXACT_SO */
 
-STRUCT    #PPC_CPU_State
+STRUCT    ##PPC_CPU_State
 	MEMBER(dummy, 4)
 	MEMBER(gpr, 32*4)
 	MEMBER(fpr, 32*8)
@@ -116,10 +116,10 @@ STRUCT    #PPC_CPU_State
 	MEMBER(pc_ofs, 4)
 	MEMBER(current_code_base, 4)
 
-STRUCT	#JITC
+STRUCT	##JITC
 	MEMBER(clientPages, 4)
 
-STRUCT	#ClientPage
+STRUCT	##ClientPage
 	MEMBER(entrypoints, 1024*4)
 	MEMBER(baseaddress, 4)
 	MEMBER(tcf_current, 4)
@@ -442,7 +442,7 @@ EXPORT(ppc_cpu_atomic_cancel_ext_exception):
 
 .balign 16
 ppc_jitc_new_pc:
-#	db	0xcc
+##	db	0xcc
 	mov	%ecx, [EXTERN(gJITC)+clientPages]
 	mov	%ebx, %eax
 	shr	%eax, 12
@@ -485,7 +485,7 @@ ppc_jitc_new_pc:
 ##
 .macro ppc_new_pc_intern
 	call	EXTERN(jitcNewPC)
-#	call	ppc_jitc_new_pc
+##	call	ppc_jitc_new_pc
 	jmp	%eax
 .endm
 
@@ -560,11 +560,11 @@ EXPORT(ppc_ext_exception_asm):
 ##	does not return, so call this per JMP
 EXPORT(ppc_program_exception_asm):
 
-	# debug
-#	pusha
-#	mov	%eax, %ecx
-#	call	EXTERN(jitc_error_program)
-#	popa
+	## debug
+##	pusha
+##	mov	%eax, %ecx
+##	call	EXTERN(jitc_error_program)
+##	popa
 
 	mov	[gCPU(pc_ofs)], %esi
 	mov	%eax, [gCPU(msr)]
@@ -738,8 +738,8 @@ EXPORT(ppc_new_pc_asm):
 ##
 ##
 EXPORT(ppc_new_pc_this_page_asm):
-#	mov	%esi, [%esp]
-#	mov	[%esi-6], %eax			# patch it now, later we don''t have the value
+##	mov	%esi, [%esp]
+##	mov	[%esi-6], %eax			# patch it now, later we don''t have the value
 	add	%eax, [gCPU(current_code_base)]
 	
 	push	4
@@ -778,12 +778,12 @@ EXPORT(ppc_new_pc_this_page_asm):
 	jmp	%edx
 #endif	
 	pop	%edi
-	#	now %eax and %edi are both native addresses
-	#	%eax is dest and %edi is source
-	#
-	#	we assume that there is a "mov %eax, xxx" instruction before
-	#	calling this function, and note that 5 is also the length of a jmp xxx
-	#	so we patch %edi-10
+	##	now %eax and %edi are both native addresses
+	##	%eax is dest and %edi is source
+	##
+	##	we assume that there is a "mov %eax, xxx" instruction before
+	##	calling this function, and note that 5 is also the length of a jmp xxx
+	##	so we patch %edi-10
 	mov	%edx, %eax
 	sub	%edi, 5
 	mov	byte ptr [%edi-5], 0xe9
