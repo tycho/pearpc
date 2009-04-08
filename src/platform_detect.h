@@ -159,6 +159,9 @@
 #if defined (__INTEL_COMPILER) || defined (__ICL)
 #define COMPILER_DETECTED
 #define TARGET_COMPILER_ICC
+#if defined (_MSC_VER)
+#define TARGET_COMPILER_VC
+#endif
 #endif
 #endif
 
