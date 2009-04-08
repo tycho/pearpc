@@ -92,7 +92,8 @@ void changeCDFunc(void *p)
 
 void initMenu()
 {
-/*	IDEConfig *idecfg = ide_get_config(0);
+#if 0
+	IDEConfig *idecfg = ide_get_config(0);
 	if (idecfg->installed && idecfg->protocol == IDE_ATAPI) {
 		MemMapFile changeCDButton(ppc_button_changecd, sizeof ppc_button_changecd);
 		int *i = new int;
@@ -106,7 +107,8 @@ void initMenu()
 		*i = 1;
 		gDisplay->insertMenuButton(changeCDButton, changeCDFunc, i);
 	}
-	gDisplay->finishMenu();*/
+	gDisplay->finishMenu();
+#endif
 }
 
 static char *textlogo UNUSED = "\033[?7h\033[40m\033[2J\033[40m\n\n\n\n\n\033[0;1m"
@@ -119,7 +121,7 @@ static char *textlogo UNUSED = "\033[?7h\033[40m\033[2J\033[40m\n\n\n\n\n\033[0;
 "\xda\xc4\xc4\n\033[24C\033[34m\xda\xc4\xc4\033[7C\xda\xc4\xc4\033[7C\xda\xc4\xc4   "
 "\xda\xc4\xc4\n\033[24C\033[0;34m\xda\xc4\xc4\033[7C\xda\xc4\xc4\033[8C\xda\xc4\xc4\xc4\xc4\xc4\xc4\n\n";
 
-static const vcp CONSOLE_BG = VC_BLACK;
+static const vcp CONSOLE_BG = VC_WHITE;
 
 void drawLogo()
 {
@@ -127,13 +129,23 @@ void drawLogo()
 	Gif g;
 	g.loadFromByteStream(img);
 	gDisplay->fillRGB(0, 0, gDisplay->mClientChar.width,
-		gDisplay->mClientChar.height, MK_RGB(0xff, 0xff, 0xff));
+		gDisplay->mClientChar.height, MK_RGB(0xB8, 0xB8, 0xB8));
+#if 1
+
 	g.draw(gDisplay, (gDisplay->mClientChar.width-g.mWidth)/2, (gDisplay->mClientChar.height >= 600) ? (150-g.mHeight)/2 : 0);
-	gDisplay->setAnsiColor(VCP(VC_BLUE, CONSOLE_BG));
-	gDisplay->fillAllVT(VCP(VC_BLUE, CONSOLE_BG), ' ');
+	gDisplay->setAnsiColor(VCP(VC_BLACK, CONSOLE_BG));
+	gDisplay->fillAllVT(VCP(VC_BLACK, CONSOLE_BG), ' ');
 //	gDisplay->print(textlogo);
-	gDisplay->setAnsiColor(VCP(VC_LIGHT(VC_BLUE), VC_TRANSPARENT));
-	gDisplay->print("\033[H"APPNAME" "APPVERSION" "COPYRIGHT"\n\n");
+	gDisplay->setAnsiColor(VCP(VC_BLACK, CONSOLE_BG));
+	gDisplay->print("\033[H"APPNAME" "APPVERSION"\n"COPYRIGHT"\n\n");
+
+#else
+
+    // This might be a nice looking alternative.
+    gDisplay->closeVT();
+    g.draw(gDisplay, (gDisplay->mClientChar.width-g.mWidth)/2, (gDisplay->mClientChar.height-g.mHeight)/2);
+
+#endif
 }
 
 void tests()

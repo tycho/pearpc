@@ -26,7 +26,7 @@
 #define APPNAME "PearPC"
 #define APPVERSION PPC_VERSION_STRING
 #define APPVERSION_IN_NUMBERS PPC_RESOURCE_VERSION
-#define COPYRIGHT "(c) 2003-2005 Sebastian Biallas <sb@biallas.net>, (c) 2009 Steven Noonan <steven@uplinklabs.net"
+#define COPYRIGHT "(c) 2009 Steven Noonan <steven@uplinklabs.net>\n(c) 2003-2005 Sebastian Biallas <sb@biallas.net>"
 
 #define EMULATOR_MODEL "PowerPC ("APPNAME" "APPVERSION")"
 

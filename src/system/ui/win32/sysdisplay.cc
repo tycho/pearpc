@@ -54,7 +54,7 @@ Win32Display::Win32Display(const char *name, const DisplayCharacteristics &chr, 
 	mClientChar = chr;
 	convertCharacteristicsToHost(mWinChar, mClientChar);
 	mTitle = strdup(name);
-	mMenuHeight = 28;
+	mMenuHeight = 0; //28;
 	gMenuHeight = mMenuHeight;
 
 	gFrameBuffer = (byte*)realloc(gFrameBuffer, mClientChar.width 
@@ -207,7 +207,7 @@ bool Win32Display::changeResolution(const DisplayCharacteristics &aClientChar)
 		EnterCriticalSection(&gDrawCS);
 		if (mFullscreenChanged) {
 			// switch out of fullscreen mode
-			gMenuHeight = 28;
+			//gMenuHeight = 28;
 
 			setMouseGrab(false);
 			ChangeDisplaySettings(NULL, 0);

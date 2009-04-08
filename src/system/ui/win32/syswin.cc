@@ -52,7 +52,7 @@
 
 HWND gHWNDMain = NULL;
 CRITICAL_SECTION gDrawCS;
-int gMenuHeight; 
+int gMenuHeight;
 BITMAPINFO gMenuBitmapInfo;
 byte *menuData;
 
@@ -151,7 +151,11 @@ static void eventLoop(void *pvoid)
 
 	Win32Display *display = (Win32Display *)pvoid;
 
+#if 0
 	gMenuHeight = display->mMenuHeight;
+#else
+    int gMenuHeight = 0;
+#endif
 	WNDCLASS wc;
 
 	memset(&wc,0,sizeof wc);
@@ -232,6 +236,7 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 			0, gMenuHeight, menuData, &gMenuBitmapInfo, DIB_RGB_COLORS);
 		EndPaint(hwnd, &ps); 		
  		LeaveCriticalSection(&gDrawCS);
+
 		damageFrameBufferAll();
 		gDisplay->displayShow();						
 		break;

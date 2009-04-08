@@ -166,6 +166,7 @@ bool SystemDisplay::openVT(int width, int height, int dx, int dy, File &font)
 void SystemDisplay::closeVT()
 {
 	delete vt;
+    vt = NULL;
 	free(buf);
 }
 
@@ -180,6 +181,7 @@ void SystemDisplay::setHWCursor(int x, int y, bool visible, byte *data)
 
 void SystemDisplay::print(const char *s)
 {
+    if (!vt) return;
 	const void *x = s;
 	int xl = strlen(s);
 	((VT100Display*)vt)->termWrite(x, xl);
