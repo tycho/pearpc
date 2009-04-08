@@ -187,7 +187,7 @@ int escape_special(char *result, int resultmaxlen, const void *S, int len, const
 				case '\b':
 					*result++='b';
 					break;
-				case '\e':
+				case '\033':
 					*result++='e';
 					break;
 				case '\f':
@@ -254,7 +254,7 @@ int unescape_special(void *Result, int resultmaxlen, const char *s)
 					*result++='\b';
 					break;
 				case 'e':
-					*result++='\e';
+					*result++='\033';
 					break;
 				case 'f':
 					*result++='\f';

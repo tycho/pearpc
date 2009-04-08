@@ -51,7 +51,7 @@ extern int blockiter_next(blockiter *b);
 extern int blockiter_skip(blockiter *b, UInt32 skip);
 
 /* return current block */
-static inline UInt32 blockiter_curr(blockiter *b)
+static UInt32 blockiter_curr(blockiter *b)
 {
     return b->e->start_block + b->block;
 }

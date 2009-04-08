@@ -123,7 +123,7 @@ public:
 
 protected:
 		int		compare(const char *s) const;
-		void		realloc(int aNewSize);
+		void		resize(int aNewSize);
 };
 
 String operator +(const String &s1, const String &s2);

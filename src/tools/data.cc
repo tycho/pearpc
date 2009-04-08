@@ -280,7 +280,7 @@ Array::Array(bool oo, int prealloc)
 	acount = 0;
 	elems = NULL;
 
-	realloc(prealloc);
+	resize(prealloc);
 }
 
 Array::~Array()
@@ -370,7 +370,7 @@ void Array::freeObj(Object *obj)
 	}
 }
 
-void Array::realloc(int n)
+void Array::resize(int n)
 {
 	if (n == 0) n = 1;	/* alloc'ing 0 bytes not allowed */
 	ASSERT((uint)n >= ecount);
@@ -386,7 +386,7 @@ void Array::realloc(int n)
 void Array::prepareWriteAccess(int i)
 {
 	uint n = calcNewBufferSize(acount, i+1);
-	if (n > acount) realloc(n);
+	if (n > acount) resize(n);
 }
 
 uint Array::count() const

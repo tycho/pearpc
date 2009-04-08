@@ -129,9 +129,9 @@
 int sys_basename(char *result, const char *filename)
 {
 // FIXME: use is_path_delim
-	char *slash1 = strrchr(filename, '/');
-	char *slash2 = strrchr(filename, '\\');
-	char *slash=(slash1>slash2) ? slash1 : slash2;
+	const char *slash1 = strrchr(filename, '/');
+	const char *slash2 = strrchr(filename, '\\');
+	const char *slash=(slash1>slash2) ? slash1 : slash2;
 	if (slash) {
 		int l=strlen(filename);
 		strncpy(result, slash+1, l-(slash-filename)-1);
@@ -145,9 +145,9 @@ int sys_basename(char *result, const char *filename)
 int sys_dirname(char *result, const char *filename)
 {
 // FIXME: use is_path_delim
-	char *slash1 = strrchr(filename, '/');
-	char *slash2 = strrchr(filename, '\\');
-	char *slash = (slash1>slash2) ? slash1 : slash2;
+	const char *slash1 = strrchr(filename, '/');
+	const char *slash2 = strrchr(filename, '\\');
+	const char *slash = (slash1>slash2) ? slash1 : slash2;
 	if (slash) {
 		strncpy(result, filename, slash-filename);
 		result[slash-filename] = 0;
@@ -266,14 +266,14 @@ int sys_common_canonicalize(char *result, const char *filename, const char *cwd,
 	return (k == 0) ? 0 : EINVAL;
 }
 
-char *sys_filename_suffix(const char *fn)
+const char *sys_filename_suffix(const char *fn)
 {
 	const char *s = NULL;
 	while (fn && *fn) {
 		if (sys_is_path_delim(*fn)) s = fn+1;
 		fn++;
 	}
-	char *p = s ? strrchr(s, '.') : NULL;
+	const char *p = s ? strrchr(s, '.') : NULL;
 	return p ? p+1 : NULL;
 }
 

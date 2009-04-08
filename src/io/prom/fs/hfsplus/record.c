@@ -140,7 +140,7 @@ char* record_extent_writekey(char* p, void* buf)
 }
 
 /* read posix permission from memory */
-static inline char* record_readperm(char *p, hfsp_perm* perm)
+static char* record_readperm(char *p, hfsp_perm* perm)
 {
     perm->owner= bswabU32_inc(&p);
     perm->group= bswabU32_inc(&p);
@@ -150,7 +150,7 @@ static inline char* record_readperm(char *p, hfsp_perm* perm)
 }
 
 /* write posix permission to memory */
-static inline char* record_writeperm(char *p, hfsp_perm* perm)
+static char* record_writeperm(char *p, hfsp_perm* perm)
 {
     bstoreU32_inc (&p, perm->owner);
     bstoreU32_inc (&p, perm->group);
@@ -163,7 +163,7 @@ static inline char* record_writeperm(char *p, hfsp_perm* perm)
  *
  * TODO use current umask, user, group, etc.
  */
-static inline void record_initperm(hfsp_perm* perm)
+static void record_initperm(hfsp_perm* perm)
 {
     perm->owner= 0;
     perm->group= 0;
@@ -173,7 +173,7 @@ static inline void record_initperm(hfsp_perm* perm)
 
 
 /* read directory info */
-static inline char* record_readDInfo(char *p, DInfo* info)
+static char* record_readDInfo(char *p, DInfo* info)
 {
     info->frRect.top	= bswabU16_inc(&p);
     info->frRect.left	= bswabU16_inc(&p);
@@ -187,7 +187,7 @@ static inline char* record_readDInfo(char *p, DInfo* info)
 }
 
 /* write directory info */
-static inline char* record_writeDInfo(char *p, DInfo* info)
+static char* record_writeDInfo(char *p, DInfo* info)
 {
     bstoreU16_inc (&p, info->frRect.top	);
     bstoreU16_inc (&p, info->frRect.left	);
@@ -201,7 +201,7 @@ static inline char* record_writeDInfo(char *p, DInfo* info)
 }
 
 /* initialize directory info */
-static inline void record_initDInfo(DInfo* info)
+static void record_initDInfo(DInfo* info)
 {
     // Hope the finder will not choke on these values
     memset(info, 0, sizeof(DInfo));
@@ -218,7 +218,7 @@ static inline void record_initDInfo(DInfo* info)
 }
 
 /* read extra Directory info */
-static inline char* record_readDXInfo(char *p, DXInfo* xinfo)
+static char* record_readDXInfo(char *p, DXInfo* xinfo)
 {
     xinfo->frScroll.v  = bswabU16_inc(&p);
     xinfo->frScroll.h  = bswabU16_inc(&p);
@@ -230,7 +230,7 @@ static inline char* record_readDXInfo(char *p, DXInfo* xinfo)
 }
 
 /* write extra Directory info */
-static inline char* record_writeDXInfo(char *p, DXInfo* xinfo)
+static char* record_writeDXInfo(char *p, DXInfo* xinfo)
 {
     bstoreU16_inc (&p, xinfo->frScroll.v );
     bstoreU16_inc (&p, xinfo->frScroll.h );
@@ -242,7 +242,7 @@ static inline char* record_writeDXInfo(char *p, DXInfo* xinfo)
 }
 
 /* initialize extra Directory info */
-static inline void record_initDXInfo(DXInfo* xinfo)
+static void record_initDXInfo(DXInfo* xinfo)
 {
     // Hope the finder will not choke on these values
     memset(xinfo, 0, sizeof(DXInfo));
@@ -322,7 +322,7 @@ static int record_initfolder(volume* vol, hfsp_cat_folder* folder)
 }
 
 /* read file info */
-static inline char* record_readFInfo(char *p, FInfo* info)
+static char* record_readFInfo(char *p, FInfo* info)
 {
     info->fdType	= bswabU32_inc(&p);
     info->fdCreator	= bswabU32_inc(&p);
@@ -334,7 +334,7 @@ static inline char* record_readFInfo(char *p, FInfo* info)
 }
 
 /* write file info */
-static inline char* record_writeFInfo(char *p, FInfo* info)
+static char* record_writeFInfo(char *p, FInfo* info)
 {
     bstoreU32_inc (&p, info->fdType	);
     bstoreU32_inc (&p, info->fdCreator	);
@@ -346,7 +346,7 @@ static inline char* record_writeFInfo(char *p, FInfo* info)
 }
 
 /* initialize file info */
-static inline void record_initFInfo(FInfo* info)
+static void record_initFInfo(FInfo* info)
 {
 	    // should use something better somehow
     info->fdType	= sig('T','E','X','T');
@@ -358,7 +358,7 @@ static inline void record_initFInfo(FInfo* info)
 }
 
 /* read extra File info */
-static inline char* record_readFXInfo(char *p, FXInfo* xinfo)
+static char* record_readFXInfo(char *p, FXInfo* xinfo)
 {
     xinfo->fdIconID	= bswabU16_inc(&p);
     xinfo->fdUnused[0]	= bswabU16_inc(&p);
@@ -371,7 +371,7 @@ static inline char* record_readFXInfo(char *p, FXInfo* xinfo)
 }
 
 /* write extra File info */
-static inline char* record_writeFXInfo(char *p, FXInfo* xinfo)
+static char* record_writeFXInfo(char *p, FXInfo* xinfo)
 {
     bstoreU16_inc (&p, xinfo->fdIconID);
     bstoreU16_inc (&p, xinfo->fdUnused[0]);
@@ -384,7 +384,7 @@ static inline char* record_writeFXInfo(char *p, FXInfo* xinfo)
 }
 
 /* initialize extra File info */
-static inline void record_initFXInfo(FXInfo* xinfo)
+static void record_initFXInfo(FXInfo* xinfo)
 {
     // Hope the finder will not choke on these values
     memset(xinfo, 0, sizeof(FXInfo));
@@ -767,7 +767,7 @@ static node_buf* record_find_node(btree* tree, void *key)
 {
     int			start, end, mid, comp;  // components of a binary search
     char		*p = NULL;
-    char		curr_key[tree->head.max_key_len];
+    char		*curr_key = (char *)malloc(tree->head.max_key_len);
 		    // The current key under examination
     hfsp_key_read	readkey	    = tree->kread;
     hfsp_key_compare	key_compare = tree->kcomp;
@@ -817,9 +817,11 @@ static node_buf* record_find_node(btree* tree, void *key)
 	node = btree_node_by_index(tree, index, NODE_CLEAN);
     }
     HFSP_SYNC_END(HFSP_READLOCK, node);
+    free(curr_key);
     return node;	// go on and use the found node
   fail:
     HFSP_SYNC_END(HFSP_READLOCK, node);
+    free(curr_key);
     return NULL;
 }
 
@@ -842,7 +844,7 @@ char* record_find_key(btree* tree, void* key, int* keyind, UInt16* node_index)
 	int		    end   = buf->desc.num_rec;
 	int		    mid   = -1;
 	char		    *p    = NULL;
-	char		    curr_key[tree->head.max_key_len];
+	char		    *curr_key = (char*)malloc(tree->head.max_key_len);
 	hfsp_key_read	    readkey	= tree->kread;
 	hfsp_key_compare    key_compare = tree->kcomp;
 	HFSP_SYNC_START(HFSP_READLOCK, node);
@@ -853,8 +855,10 @@ char* record_find_key(btree* tree, void* key, int* keyind, UInt16* node_index)
 	    if (!p)
 		HFSP_ERROR(-1, "record_find_key: unexpected error");
 	    p = readkey  (p, curr_key);
-	    if (!p)
+        if (!p) {
+        free(curr_key);
 		goto fail;
+        }
 	    comp = key_compare(curr_key, key);
 	    if (comp > 0)
 		start = mid + 1;
@@ -870,9 +874,11 @@ char* record_find_key(btree* tree, void* key, int* keyind, UInt16* node_index)
 	{
 	    *keyind = mid;  // Thats where we found it
 	    HFSP_SYNC_END(HFSP_READLOCK, node);
+        free(curr_key);
 	    return p;
 	}
 	*keyind = end;	    // Here we can insert a new key
+    free(curr_key);
     }
     HFSP_ERROR(ENOENT, NULL);
   fail:

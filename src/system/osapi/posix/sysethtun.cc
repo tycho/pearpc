@@ -29,6 +29,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cerrno>
 #include <cstdio>
 #include <cstdlib>
@@ -457,4 +459,5 @@ EthDevice *createEthernetTunnel()
 	throw MsgException("Your system has no support for ethernet tunnels.");
 }
 
+#endif
 #endif

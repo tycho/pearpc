@@ -81,7 +81,7 @@
 \def printm(s...)
 \brief Vaariadic macro for debug and progress message printing.
  */
-#define printm(s...)	ht_printf("[PCAP] "s)
+#define printm(...)	ht_printf("[PCAP] ", __VA_ARGS__)
 #define MAX_PACKET_SIZE	16384
 
 /**

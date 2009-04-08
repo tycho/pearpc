@@ -33,7 +33,6 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
-#include <unistd.h>
 
 #include "system/sys.h"
 #include "system/systhread.h"
@@ -83,6 +82,9 @@ enum RxConfigurationBits {
 };
 
 /* registers */
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct Registers {
 	uint8  id0; // 0x00 (mac address)
 	uint8  id1;
@@ -147,6 +149,9 @@ struct Registers {
 	uint32 Twister; // 0x7c
 	uint8  PHY2; // 0x80
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 struct Packet {
 	uint32  pid;
@@ -155,11 +160,17 @@ struct Packet {
 };
 
 // IEEE 802.3 MAC, Ethernet-II
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct EthFrameII {
 	byte	destMAC[6];
 	byte	srcMAC[6];
 	byte	type[2];
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 enum EEPROMField {
         EEPROM_NodeAddress0 =           0x00,

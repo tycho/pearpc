@@ -34,6 +34,9 @@
 #define PPC_BUS_FREQUENCY	(PPC_CLOCK_FREQUENCY/5)
 #define PPC_TIMEBASE_FREQUENCY	(PPC_BUS_FREQUENCY/4)
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct PPC_CPU_State {
 	// offsetof first entry of this structure must not be 0
 	uint32 dummy;
@@ -126,8 +129,11 @@ struct PPC_CPU_State {
 	uint64 vtemp64;
 	uint32 vfcw;	// floating point control word store for vect unit
 	uint32 vfcw_save;	// floating point control word save
-	Vector_t vr[36] ALIGN_STRUCT(16);	// <-- this MUST be 16-byte aligned!
+	ALIGN_STRUCT(16) Vector_t vr[36];	// <-- this MUST be 16-byte aligned!
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 enum PPC_Register {
 	PPC_REG_NO = 0,
@@ -209,7 +215,7 @@ bool cpu_init();
 void cpu_init_config();
 
 
-#define SINGLESTEP(info...)	ppc_set_singlestep_v(true, __FILE__, __LINE__, info)
+#define SINGLESTEP(...)	ppc_set_singlestep_v(true, __FILE__, __LINE__, __VA_ARGS__)
 extern uint32 gBreakpoint;
 extern uint32 gBreakpoint2;
 

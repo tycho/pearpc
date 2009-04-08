@@ -472,7 +472,7 @@ Function *Debugger::matchFunction(const String &name, const Enumerator &params)
 	return r;
 }
 
-inline static void disasm(uint32 code, uint32 ea, char *result)
+static void disasm(uint32 code, uint32 ea, char *result)
 {
 	PPCDisassembler dis;
 	CPU_ADDR addr;
@@ -486,8 +486,8 @@ void Debugger::dump()
 	int r = 0;
 	const char *hiColor, *loColor;
 	if (mUseColors) {
-		hiColor = "\e[33;1m";
-		loColor = "\e[37;1m";
+		hiColor = "\033[33;1m";
+		loColor = "\033[37;1m";
 	} else {
 		hiColor = "";
 		loColor = "";

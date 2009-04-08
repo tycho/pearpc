@@ -30,7 +30,7 @@
 # include "hfs.h"
 # include "hfsp.h"
 
-extern int errno;
+//extern int errno;
 /* Last error is eventually found here */
 extern const char *hfsp_error; 
 
@@ -89,7 +89,7 @@ extern const char *hfsp_error;
 
     
 /** helper function to create those Apple 4 byte Signatures */
-static inline UInt32 sig(char c0, char c1, char c2, char c3)
+static UInt32 sig(char c0, char c1, char c2, char c3)
 {
     UInt32 sig;
     ((char*)&sig)[0] = c0;

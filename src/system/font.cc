@@ -24,12 +24,18 @@
 #include <cstring>
 #include "system/font.h"
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct FFH {
 	byte magic[4];
 	byte height;
 	byte dist;
 	byte res0[11];
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 struct FChar {
 	byte width;

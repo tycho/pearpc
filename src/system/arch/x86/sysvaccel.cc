@@ -20,7 +20,7 @@
 
 #include "stdafx.h"
 
-#ifdef TARGET_CPU_X86
+#if defined(TARGET_CPU_X86) && defined(TARGET_COMPILER_GCC)
 
 #include "system/sysvaccel.h"
 
@@ -36,7 +36,7 @@ extern "C" {
 	extern void FASTCALL x86_convert_4be888_to_4le888(uint32 pixel, byte *input, byte *output);
 }
 
-static inline void convertBaseColor(uint &b, uint fromBits, uint toBits)
+static void convertBaseColor(uint &b, uint fromBits, uint toBits)
 {
 	if (toBits > fromBits) {
 		b <<= toBits - fromBits;
@@ -45,7 +45,7 @@ static inline void convertBaseColor(uint &b, uint fromBits, uint toBits)
 	}
 }
 
-static inline void genericConvertDisplay(
+static void genericConvertDisplay(
 	const DisplayCharacteristics &aSrcChar,
 	const DisplayCharacteristics &aDestChar,
 	const void *aSrcBuf,

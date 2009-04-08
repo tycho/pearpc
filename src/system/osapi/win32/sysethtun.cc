@@ -48,7 +48,7 @@
 #define TAP_WIN32_MIN_MAJOR 7
 #define TAP_WIN32_MIN_MINOR 1
 
-#define printm(s...)	ht_printf("[TAP-WIN32]: "s)
+#define printm(...)	ht_printf("[TAP-WIN32]: ", __VA_ARGS__)
 #define MAX_PACKET_SIZE	16384
 #define ERRORMSG_SIZE	1024
 

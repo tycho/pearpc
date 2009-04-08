@@ -30,9 +30,9 @@
 //#define VTERM_LOG_SEQS
 
 #ifdef VTERM_LOG_SEQS
-#define VTERMLOG(a...) DPRINTF(a)
+#define VTERMLOG(...) DPRINTF(__VA_ARGS__)
 #else
-#define VTERMLOG(a...)
+#define VTERMLOG(...)
 #endif
 
 static void readCSIParamsMax16(int Pn[], int &n, int &i, const char *buf, int buflen, bool allow_spaces)
@@ -839,7 +839,7 @@ static int vcToAnsi(char *buf, vc color, bool fg)
 void vcpToAnsi(char *buf32, vcp color)
 {
 	int i = 0;
-	i += sprintf(buf32+i, "\e[");
+	i += sprintf(buf32+i, "\033[");
 	int fga = vcToAnsi(buf32+i, VCP_FOREGROUND(color), true);
 	i += fga;
 	if (fga) i += sprintf(buf32+i, ";");

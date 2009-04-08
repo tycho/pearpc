@@ -2364,7 +2364,7 @@ JITCFlow ppc_opc_gen_lwzx()
 	return flowContinue;
 }
 
-static inline NativeReg FASTCALL ppc_opc_gen_helper_lvx_hint(int rA, int rB, int hint)
+static NativeReg FASTCALL ppc_opc_gen_helper_lvx_hint(int rA, int rB, int hint)
 {
 	NativeReg ret = REG_NO;
 	byte modrm[6];
@@ -2413,7 +2413,7 @@ static inline NativeReg FASTCALL ppc_opc_gen_helper_lvx_hint(int rA, int rB, int
 	return ret;
 }
 
-static inline NativeReg FASTCALL ppc_opc_gen_helper_lvx(int rA, int rB, int hint=0)
+static NativeReg FASTCALL ppc_opc_gen_helper_lvx(int rA, int rB, int hint=0)
 {
 	NativeReg ret = REG_NO;
 	byte modrm[6];

@@ -29,7 +29,6 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
-#include <unistd.h>
 
 #include "system/sys.h"
 #include "system/systhread.h"
@@ -138,6 +137,9 @@ enum DmaCtrlBits {
 	rest missing
 };*/
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct MIIRegisters {
 	uint16 control;
 	uint16 status;
@@ -148,6 +150,9 @@ struct MIIRegisters {
 	uint16 expansion;
 	uint16 nextPage;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	Registers
@@ -157,6 +162,9 @@ struct RegWindow {
 	uint16 u16[8];
 };
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct Registers {
 	// 0x10 bytes missing (current window)
 	uint32	r0;
@@ -201,6 +209,9 @@ struct Registers {
 	uint16	PowerMgmtCtrl;
 	uint16	r16;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 #define RA_INV	0
 
@@ -282,6 +293,9 @@ static byte gRegAccess[0x70] =
 /*
  *	Window 0
  */
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow0 {
 	uint32	r0;
 	uint32	BiosRomAddr;
@@ -291,6 +305,9 @@ struct RegWindow0 {
 	uint16	EepromData;
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 enum W0_Offsets {
 	W0_EEPROMCmd = 0xa,
@@ -314,16 +331,25 @@ enum W0_EEPROMSubCmd {
 /*
  *	Window 2
  */
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow2 {
 	uint16	StationAddress[6];
 	uint16	StationMask[6];
 	uint16	ResetOptions;
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	Window 3
  */
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow3 {
 	uint32	InternalConfig;	// [1] p.58,76
 	uint16	MaxPktSize;
@@ -333,6 +359,9 @@ struct RegWindow3 {
 	uint16	TxFree;		// [1] p.101
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	Window 4
@@ -343,6 +372,9 @@ enum W4_PhysMgmtBits {
 	PM_mgmtDir	= 1<<2
 };
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow4 {
 	uint16	r0;
 	uint16	r1;
@@ -354,6 +386,9 @@ struct RegWindow4 {
 	byte	UpperBytesOK;
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	Window 5
@@ -365,7 +400,10 @@ enum RxFilterBits {	// [1] p.112
 	RXFILT_receiveAllFrames = 8,
 	RXFILT_receiveMulticastHash = 16
 };
- 
+
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow5 {
 	uint16	TxStartThresh;
 	uint16	r0;
@@ -377,10 +415,16 @@ struct RegWindow5 {
 	uint16	IndicationEnable;// [1] p.120
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	Window 6
  */
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct RegWindow6 {
 	uint8	CarrierLost;
 	uint8	SqeErrors;
@@ -396,6 +440,9 @@ struct RegWindow6 {
 	uint16	BytesXmittedOk;
 	uint16	XXX;		// IntStatus/CommandRegister
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	EEPROM
@@ -464,10 +511,16 @@ struct DPD1 {
 /*	DPDFragDesc Frags[n] */
 };
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct DPDFragDesc {
 	uint32	DnFragAddr;
 	uint32	DnFragLen;	// [12:0] fragLen, [31] lastFrag
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 // must be on 8-byte physical address boundary
 struct UPD {
@@ -476,10 +529,16 @@ struct UPD {
 /*	UPDFragDesc Frags[n] */
 };
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct UPDFragDesc {
 	uint32	UpFragAddr;
 	uint32	UpFragLen;	// [12:0] fragLen, [31] lastFrag
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 #define MAX_DPD_FRAGS	63
 #define MAX_UPD_FRAGS	63
@@ -508,11 +567,17 @@ enum UpPktStatusBits {
 };
 
 // IEEE 802.3 MAC, Ethernet-II
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct EthFrameII {
 	byte	destMAC[6];
 	byte	srcMAC[6];
 	byte	type[2];
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 /*
  *	misc

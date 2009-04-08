@@ -84,7 +84,7 @@ void sys_delete_timer(sys_timer t)
 	delete timer;
 }
 
-static inline long long int toMSecs(time_t secs, long int nanosecs)
+static long long int toMSecs(time_t secs, long int nanosecs)
 {
 	return secs * 1000 + (nanosecs + 500*1000) / (1000*1000);
 }

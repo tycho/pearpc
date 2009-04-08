@@ -50,7 +50,7 @@
 String::String()
 {
 	mContent = NULL;
-	realloc(0);
+	resize(0);
 }
 
 /**
@@ -109,7 +109,7 @@ String::~String()
  */
 void String::assign(const String *s)
 {
-	realloc(s->mLength);
+	resize(s->mLength);
 	memcpy(mContent, s->mContent, mLength);
 }
 
@@ -118,7 +118,7 @@ void String::assign(const String *s)
  */
 void String::assign(const String &s)
 {
-	realloc(s.mLength);
+	resize(s.mLength);
 	memcpy(mContent, s.mContent, mLength);
 }
 
@@ -128,7 +128,7 @@ void String::assign(const String &s)
 void String::assign(const char *s)
 {
 	int slen = s ? strlen(s) : 0;
-	realloc(slen);
+	resize(slen);
 	memcpy(mContent, s, mLength);
 }
 
@@ -137,7 +137,7 @@ void String::assign(const char *s)
  */
 void String::assign(const byte *s, int aLength)
 {
-	realloc(aLength);
+	resize(aLength);
 	memcpy(mContent, s, mLength);
 }
 
@@ -146,7 +146,7 @@ void String::assign(const byte *s, int aLength)
  */
 void String::assign(char c, int count)
 {
-	realloc(count);
+	resize(count);
 	memset(mContent, c, count);
 }
 
@@ -170,7 +170,7 @@ void String::append(const String &s)
 {
 	if (s.mLength) {
 		int oldLength = mLength;
-		realloc(mLength + s.mLength);
+		resize(mLength + s.mLength);
 		memcpy(&mContent[oldLength], s.mContent, s.mLength);
 	}
 }
@@ -180,14 +180,14 @@ void String::append(const char *s)
 	if (s && *s) {
 		int oldLength = mLength;
 		int slen = strlen(s);
-		realloc(mLength + slen);
+		resize(mLength + slen);
 		memcpy(&mContent[oldLength], s, slen);
 	}
 }
 
 void String::appendChar(char c)
 {
-	realloc(mLength+1);
+	resize(mLength+1);
 	mContent[mLength-1] = c;
 }
 
@@ -198,7 +198,7 @@ void String::prepend(const String &s)
 {
 	if (s.mLength) {
 		int oldLength = mLength;
-		realloc(mLength + s.mLength);
+		resize(mLength + s.mLength);
 		memmove(&mContent[s.mLength], &mContent[0], oldLength);
 		memcpy(&mContent[0], s.mContent, s.mLength);
 	}
@@ -209,7 +209,7 @@ void String::prepend(const String &s)
  */
 void String::clear()
 {
-	realloc(0);
+	resize(0);
 }
 
 String *String::clone() const
@@ -301,7 +301,7 @@ int String::compareTo(const Object *o) const
  */
 void String::crop(int aNewLength)
 {
-	if ((aNewLength >= 0) && (aNewLength < mLength)) realloc(aNewLength);
+	if ((aNewLength >= 0) && (aNewLength < mLength)) resize(aNewLength);
 }
 
 /**
@@ -319,7 +319,7 @@ void String::del(int pos, int aLength)
 	if (pos + aLength < mLength) {
 		memmove(&mContent[pos], &mContent[pos+aLength], mLength-aLength-pos);
 	}
-	realloc(mLength-aLength);
+	resize(mLength-aLength);
 }
 
 /**
@@ -331,8 +331,8 @@ void String::escape(const char *aSpecialChars, bool bit7)
 {
 	if (!mLength) return;
 	String copy(this);
-	realloc(mLength*4);
-	realloc(escape_special((char*)mContent, mLength, copy.mContent,
+	resize(mLength*4);
+	resize(escape_special((char*)mContent, mLength, copy.mContent,
 					   copy.mLength, aSpecialChars, bit7));
 }
 
@@ -410,7 +410,7 @@ void String::insert(const String &s, int pos)
 {
 	if (pos > mLength || pos < 0) throw MsgException("index out of bounds");
 	if (!s.mLength) return;
-	realloc(mLength+s.mLength);
+	resize(mLength+s.mLength);
 	if (mLength-s.mLength-pos > 0)
 		memmove(&mContent[pos+s.mLength], &mContent[pos], mLength-s.mLength-pos);
 	memmove(&mContent[pos], s.mContent, s.mLength);
@@ -440,14 +440,14 @@ ObjectID String::getObjectID() const
 	return OBJID_STRING;
 }
 
-void String::realloc(int aNewSize)
+void String::resize(int aNewSize)
 {
 	mLength = aNewSize;
 	mContent = (byte*)::realloc(mContent, mLength+1);
 	mContent[mLength] = 0;
 /*	if (mContent) {
 		if (aNewSize) {
-			mContent = (byte*)::realloc(mContent, aNewSize);
+			mContent = (byte*)::resize(mContent, aNewSize);
 		} else {
 			free(mContent);
 			mContent = NULL;
@@ -674,12 +674,12 @@ char *String::toString() const
 void String::unescape()
 {
 	String copy(this);
-	realloc(unescape_special(mContent, mLength, (char*)copy.mContent));
+	resize(unescape_special(mContent, mLength, (char*)copy.mContent));
 }
 
 String &String::operator +=(char c)
 {
-	realloc(mLength+1);
+	resize(mLength+1);
 	mContent[mLength-1] = c;
 	return *this;
 }

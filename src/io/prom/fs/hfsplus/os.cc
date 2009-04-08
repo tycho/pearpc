@@ -39,7 +39,7 @@ int fcntl(int, int, ...);
 
 //# ifdef HAVE_UNISTD_H
 # if 1
-#  include <unistd.h>
+//#  include <unistd.h>
 # else
 int close(int);
 off_t lseek(int, off_t, int);

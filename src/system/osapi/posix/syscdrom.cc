@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cstdio>
 #include <cstring>
 #include "errno.h"
@@ -39,3 +41,5 @@ CDROMDevice* createNativeCDROMDevice(const char* device_name, const char* image_
     // No native CDROM devices on this platform
     return NULL;
 }
+
+#endif

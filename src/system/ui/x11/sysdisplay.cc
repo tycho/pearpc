@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <csignal>
 #include <cstdlib>
 #include <unistd.h>
@@ -466,3 +468,5 @@ SystemDisplay *allocSystemDisplay(const char *title, const DisplayCharacteristic
 	if (gDisplay) return NULL;
 	return new X11SystemDisplay(title, chr, redraw_ms);
 }
+
+#endif

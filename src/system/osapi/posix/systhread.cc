@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cstdlib>
 #include <cerrno>
 #include <sys/time.h>
@@ -144,3 +146,5 @@ void *sys_join_thread(sys_thread t)
 	pthread_join(*(pthread_t *)t, &ret);
 	return ret;
 }
+
+#endif

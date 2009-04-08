@@ -32,11 +32,11 @@
  *	FIXME: put somewhere appropriate
  */
 #ifndef HAS_LOG2
-#define log2(x) log(x)/log(2)
+#define log2(x) log((float)(x))/log(2.0f)
 #endif /* HAS_LOG2 */ 
 
 #ifndef HAS_EXP2
-#define exp2(x)	pow(2, x)
+#define exp2(x)	pow(2.0f, (float)(x))
 #endif /* HAS_EXP2 */
 
 #define ASSERT_FLUSHED(vrA)
@@ -55,16 +55,30 @@
 #define vrT	JITC_VECTOR_TEMP
 #define vrNEG1	JITC_VECTOR_NEG1
 
-static inline void commutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB);
-static inline void noncommutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB);
+static void commutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB);
+static void noncommutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB);
 
-static inline void commutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB);
-static inline void noncommutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB);
+static void commutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB);
+static void noncommutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB);
+
+#ifdef TARGET_COMPILER_VC
+static float truncf(const float a)
+{
+    float result;
+    __asm {
+        cvttss2si   eax, dword ptr [a]
+        //cvttsd2si   eax, qword ptr [a] //for double values
+        //return float value. if you want to return an int, you're actually done already...
+        mov         dword ptr [result], eax
+        fld         dword ptr [result]
+    }
+}
+#endif
 
 /**	PACK_PIXEL	Packs a uint32 pixel to uint16 pixel
  *	v.219
  */
-static inline uint16 PACK_PIXEL(uint32 clr)
+static uint16 PACK_PIXEL(uint32 clr)
 {
 	return	(((clr & 0x000000f8) >> 3) | \
 		 ((clr & 0x0000f800) >> 6) | \
@@ -74,7 +88,7 @@ static inline uint16 PACK_PIXEL(uint32 clr)
 /**	UNPACK_PIXEL	Unpacks a uint16 pixel to uint32 pixel
  *	v.276 & v.279
  */
-static inline uint32 UNPACK_PIXEL(uint16 clr)
+static uint32 UNPACK_PIXEL(uint16 clr)
 {
 	return	(((uint32)(clr & 0x001f)) | \
 		 ((uint32)(clr & 0x03E0) << 3) | \
@@ -82,7 +96,7 @@ static inline uint32 UNPACK_PIXEL(uint16 clr)
 		 (((clr) & 0x8000) ? 0xff000000 : 0));
 }
 
-static inline uint8 SATURATE_UB(uint16 val)
+static uint8 SATURATE_UB(uint16 val)
 {
 	if (val & 0xff00) {
 		gCPU.vscr |= VSCR_SAT;
@@ -90,7 +104,7 @@ static inline uint8 SATURATE_UB(uint16 val)
 	}
 	return val;
 }
-static inline uint8 SATURATE_0B(uint16 val)
+static uint8 SATURATE_0B(uint16 val)
 {
 	if (val & 0xff00) {
 		gCPU.vscr |= VSCR_SAT;
@@ -99,7 +113,7 @@ static inline uint8 SATURATE_0B(uint16 val)
 	return val;
 }
 
-static inline uint16 SATURATE_UH(uint32 val)
+static uint16 SATURATE_UH(uint32 val)
 {
 	if (val & 0xffff0000) {
 		gCPU.vscr |= VSCR_SAT;
@@ -108,7 +122,7 @@ static inline uint16 SATURATE_UH(uint32 val)
 	return val;
 }
 
-static inline uint16 SATURATE_0H(uint32 val)
+static uint16 SATURATE_0H(uint32 val)
 {
 	if (val & 0xffff0000) {
 		gCPU.vscr |= VSCR_SAT;
@@ -117,7 +131,7 @@ static inline uint16 SATURATE_0H(uint32 val)
 	return val;
 }
 
-static inline sint8 SATURATE_SB(sint16 val)
+static sint8 SATURATE_SB(sint16 val)
 {
 	if (val > 127) {			// 0x7F
 		gCPU.vscr |= VSCR_SAT;
@@ -129,7 +143,7 @@ static inline sint8 SATURATE_SB(sint16 val)
 	return val;
 }
 
-static inline uint8 SATURATE_USB(sint16 val)
+static uint8 SATURATE_USB(sint16 val)
 {
 	if (val > 0xff) {
 		gCPU.vscr |= VSCR_SAT;
@@ -141,7 +155,7 @@ static inline uint8 SATURATE_USB(sint16 val)
 	return (uint8)val;
 }
 
-static inline sint16 SATURATE_SH(sint32 val)
+static sint16 SATURATE_SH(sint32 val)
 {
 	if (val > 32767) {			// 0x7fff
 		gCPU.vscr |= VSCR_SAT;
@@ -153,7 +167,7 @@ static inline sint16 SATURATE_SH(sint32 val)
 	return val;
 }
 
-static inline uint16 SATURATE_USH(sint32 val)
+static uint16 SATURATE_USH(sint32 val)
 {
 	if (val > 0xffff) {
 		gCPU.vscr |= VSCR_SAT;
@@ -165,7 +179,7 @@ static inline uint16 SATURATE_USH(sint32 val)
 	return (uint16)val;
 }
 
-static inline sint32 SATURATE_UW(sint64 val)
+static sint32 SATURATE_UW(sint64 val)
 {
 	if (val > 0xffffffffLL) {
 		gCPU.vscr |= VSCR_SAT;
@@ -174,7 +188,7 @@ static inline sint32 SATURATE_UW(sint64 val)
 	return val;
 }
 
-static inline sint32 SATURATE_SW(sint64 val)
+static sint32 SATURATE_SW(sint64 val)
 {
 	if (val > 2147483647LL) {			// 0x7fffffff
 		gCPU.vscr |= VSCR_SAT;
@@ -186,12 +200,12 @@ static inline sint32 SATURATE_SW(sint64 val)
 	return val;
 }
 
-static inline void vec_raise_saturate(void)
+static void vec_raise_saturate(void)
 {
 	asmOR(&gCPU.vscr, VSCR_SAT);
 }
 
-static inline void vec_saturateSB(NativeReg reg, NativeReg reg2)
+static void vec_saturateSB(NativeReg reg, NativeReg reg2)
 {
 	jitcClobberCarryAndFlags();
 
@@ -214,7 +228,7 @@ static inline void vec_saturateSB(NativeReg reg, NativeReg reg2)
 	asmResolveFixup(skip3);
 }
 
-static inline void vec_saturateSUB(NativeReg reg, NativeReg reg2)
+static void vec_saturateSUB(NativeReg reg, NativeReg reg2)
 {
 	jitcClobberCarryAndFlags();
 
@@ -237,7 +251,7 @@ static inline void vec_saturateSUB(NativeReg reg, NativeReg reg2)
 	asmResolveFixup(skip3);
 }
 
-static inline void vec_saturateUB(NativeReg8 reg)
+static void vec_saturateUB(NativeReg8 reg)
 {
 	jitcClobberCarryAndFlags();
 
@@ -253,7 +267,7 @@ static inline void vec_saturateUB(NativeReg8 reg)
 }
 
 
-static inline void vec_saturateSH(NativeReg reg, NativeReg reg2)
+static void vec_saturateSH(NativeReg reg, NativeReg reg2)
 {
 	jitcClobberCarryAndFlags();
 
@@ -276,7 +290,7 @@ static inline void vec_saturateSH(NativeReg reg, NativeReg reg2)
 	asmResolveFixup(skip3);
 }
 
-static inline void vec_saturateSUH(NativeReg reg, NativeReg reg2)
+static void vec_saturateSUH(NativeReg reg, NativeReg reg2)
 {
 	jitcClobberCarryAndFlags();
 
@@ -299,7 +313,7 @@ static inline void vec_saturateSUH(NativeReg reg, NativeReg reg2)
 	asmResolveFixup(skip3);
 }
 
-static inline void vec_saturateUH(NativeReg8 reg)
+static void vec_saturateUH(NativeReg8 reg)
 {
 	jitcClobberCarryAndFlags();
 
@@ -315,7 +329,7 @@ static inline void vec_saturateUH(NativeReg8 reg)
 	asmResolveFixup(skip1);
 }
 
-static inline void vec_getByte(NativeReg8 dest, int src, NativeReg r, int i)
+static void vec_getByte(NativeReg8 dest, int src, NativeReg r, int i)
 {
 	modrm_o modrm;
 
@@ -324,7 +338,7 @@ static inline void vec_getByte(NativeReg8 dest, int src, NativeReg r, int i)
 	asmALU(X86_MOV, dest, x86_mem2(modrm, r, &(gCPU.vr[src].b[i])));
 }
 
-static inline void vec_setByte(int dest, NativeReg r, int i, NativeReg8 src)
+static void vec_setByte(int dest, NativeReg r, int i, NativeReg8 src)
 {
 	modrm_o modrm;
 
@@ -333,7 +347,7 @@ static inline void vec_setByte(int dest, NativeReg r, int i, NativeReg8 src)
 	asmALU(X86_MOV, x86_mem2(modrm, r, &(gCPU.vr[dest].b[i])), src);
 }
 
-static inline void vec_getByteZ(NativeReg dest, int src, int i)
+static void vec_getByteZ(NativeReg dest, int src, int i)
 {
 	modrm_o modrm;
 
@@ -342,7 +356,7 @@ static inline void vec_getByteZ(NativeReg dest, int src, int i)
 	asmMOVxx_B(X86_MOVZX, dest, x86_mem2(modrm, &(gCPU.vr[src].b[i])));
 }
 
-static inline void vec_getByteS(NativeReg dest, int src, int i)
+static void vec_getByteS(NativeReg dest, int src, int i)
 {
 	modrm_o modrm;
 
@@ -351,21 +365,21 @@ static inline void vec_getByteS(NativeReg dest, int src, int i)
 	asmMOVxx_B(X86_MOVSX, dest, x86_mem2(modrm, &(gCPU.vr[src].b[i])));
 }
 
-static inline void vec_getHalf(NativeReg16 dest, int src, int i)
+static void vec_getHalf(NativeReg16 dest, int src, int i)
 {
 	ASSERT_FLUSHED(src);
 
 	asmMOV(dest, &(gCPU.vr[src].b[i]));
 }
 
-static inline void vec_setHalf(int dest, int i, NativeReg16 src)
+static void vec_setHalf(int dest, int i, NativeReg16 src)
 {
 	ASSERT_FLUSHED(dest);
 
 	asmMOV(&(gCPU.vr[dest].b[i]), src);
 }
 
-static inline void vec_getHalfZ(NativeReg dest, int src, int i)
+static void vec_getHalfZ(NativeReg dest, int src, int i)
 {
 	modrm_o modrm;
 
@@ -374,7 +388,7 @@ static inline void vec_getHalfZ(NativeReg dest, int src, int i)
 	asmMOVxx_W(X86_MOVZX, dest, x86_mem2(modrm, &(gCPU.vr[src].b[i])));
 }
 
-static inline void vec_getHalfS(NativeReg dest, int src, int i)
+static void vec_getHalfS(NativeReg dest, int src, int i)
 {
 	modrm_o modrm;
 
@@ -383,14 +397,14 @@ static inline void vec_getHalfS(NativeReg dest, int src, int i)
 	asmMOVxx_W(X86_MOVSX, dest, x86_mem2(modrm, &(gCPU.vr[src].b[i])));
 }
 
-static inline void vec_getWord(NativeReg dest, int src, int i)
+static void vec_getWord(NativeReg dest, int src, int i)
 {
 	ASSERT_FLUSHED(src);
 
 	asmMOV(dest, &(gCPU.vr[src].b[i]));
 }
 
-static inline void vec_setWord(int dest, int i, NativeReg src)
+static void vec_setWord(int dest, int i, NativeReg src)
 {
 	ASSERT_FLUSHED(dest);
 
@@ -411,7 +425,7 @@ const static sint32 sint32_min = -2147483648;
 const static double uint32_max = 4294967295;
 const static uint32 uint32_min = 0;
 
-static inline void vec_Copy(int dest, int src)
+static void vec_Copy(int dest, int src)
 {
 	if (dest == src);
 
@@ -436,7 +450,7 @@ static inline void vec_Copy(int dest, int src)
 	}
 }
 
-static inline void vec_Zero(int dest)
+static void vec_Zero(int dest)
 {
 	if (SSE_AVAIL) {
 		NativeVectorReg reg = jitcMapClientVectorRegisterDirty(dest);
@@ -456,7 +470,7 @@ static inline void vec_Zero(int dest)
 	}
 }
 
-static inline void vec_Neg1(int dest)
+static void vec_Neg1(int dest)
 {
 	if (SSE_AVAIL) {
 		NativeVectorReg reg = jitcMapClientVectorRegisterDirty(dest);
@@ -477,7 +491,7 @@ static inline void vec_Neg1(int dest)
 	}
 }
 
-static inline void vec_Not(int dest, int src)
+static void vec_Not(int dest, int src)
 {
 	if (SSE_AVAIL) {
 		NativeVectorReg reg1;
@@ -513,7 +527,7 @@ static inline void vec_Not(int dest, int src)
 	}
 }
 
-static inline void vec_SelectiveLoadByte(X86FlagTest flags, NativeReg8 reg1, NativeReg reg2, int vrA, int vrB)
+static void vec_SelectiveLoadByte(X86FlagTest flags, NativeReg8 reg1, NativeReg reg2, int vrA, int vrB)
 {
 	modrm_o modrm;
 
@@ -530,7 +544,7 @@ static inline void vec_SelectiveLoadByte(X86FlagTest flags, NativeReg8 reg1, Nat
 	asmResolveFixup(end);
 }
 
-static inline void vec_PermuteQuad(NativeReg8 reg1, NativeReg reg2, NativeReg8 regT, NativeReg regA, NativeReg regB, int vrA, int vrB, int vrD, int i)
+static void vec_PermuteQuad(NativeReg8 reg1, NativeReg reg2, NativeReg8 regT, NativeReg regA, NativeReg regB, int vrA, int vrB, int vrD, int i)
 {
 	modrm_o modrm;
 
@@ -1321,7 +1335,7 @@ JITCFlow ppc_opc_gen_vslo()
 	return flowEndBlock;
 }
 
-static inline void ppc_opc_gen_helper_vsldoi_left(int vrA, int vrD, int shift, int pshift, NativeReg reg)
+static void ppc_opc_gen_helper_vsldoi_left(int vrA, int vrD, int shift, int pshift, NativeReg reg)
 {
 	for (int i=12; i>=shift; i-=4) {
 		vec_getWord(reg, vrA, i-shift);
@@ -1338,7 +1352,7 @@ static inline void ppc_opc_gen_helper_vsldoi_left(int vrA, int vrD, int shift, i
 	}
 }
 
-static inline void ppc_opc_gen_helper_vsldoi_right(int vrB, int vrD, int shift, int ashift, int bshift, NativeReg reg)
+static void ppc_opc_gen_helper_vsldoi_right(int vrB, int vrD, int shift, int ashift, int bshift, NativeReg reg)
 {
 	for (int i=0; i<bshift; i+=4) {
 		vec_getWord(reg, vrB, i+ashift);
@@ -2660,7 +2674,7 @@ JITCFlow ppc_opc_gen_vpkuwum()
 #endif
 }
 
-static inline void ppc_opc_gen_helper_vpkpx(NativeReg reg1, NativeReg reg2, NativeReg reg3)
+static void ppc_opc_gen_helper_vpkpx(NativeReg reg1, NativeReg reg2, NativeReg reg3)
 {
 	asmALU(X86_MOV, reg2, reg1);
 	asmALU(X86_MOV, reg3, reg1);
@@ -3329,7 +3343,7 @@ JITCFlow ppc_opc_gen_vupklsh()
 	return flowEndBlock;
 }
 
-static inline void helper_gen_vaddubm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vaddubm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_MOV, reg2, reg);
@@ -3417,7 +3431,7 @@ JITCFlow ppc_opc_gen_vaddubm()
 #endif
 }
 
-static inline void helper_gen_vadduhm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vadduhm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_MOV, reg2, reg);
@@ -3623,7 +3637,7 @@ JITCFlow ppc_opc_gen_vaddcuw()
 	return flowEndBlock;
 }
 
-static inline void helper_gen_vaddubs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vaddubs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_MOV, reg2, reg);
@@ -3744,7 +3758,7 @@ JITCFlow ppc_opc_gen_vaddsbs()
 	return flowEndBlock;
 }
 
-static inline void helper_gen_vadduhs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vadduhs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_MOV, reg2, reg);
@@ -3973,7 +3987,7 @@ JITCFlow ppc_opc_gen_vaddsws()
 	return flowEndBlock;
 }
 
-static inline void helper_gen_vsububm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vsububm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_NOT, reg);
@@ -4055,7 +4069,7 @@ JITCFlow ppc_opc_gen_vsububm()
 #endif
 }
 
-static inline void helper_gen_vsubuhm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vsubuhm(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_NOT, reg);
@@ -4289,7 +4303,7 @@ JITCFlow ppc_opc_gen_vsubcuw()
 #endif
 }
 
-static inline void helper_gen_vsububs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vsububs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_NOT, reg);
@@ -4439,7 +4453,7 @@ JITCFlow ppc_opc_gen_vsubsbs()
 #endif
 }
 
-static inline void helper_gen_vsubuhs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
+static void helper_gen_vsubuhs(NativeReg reg, NativeReg reg2, modrm_p modrma, modrm_p modrmb)
 {
 	asmALU(X86_MOV, reg, modrma);
 	asmALU(X86_NOT, reg);
@@ -6447,7 +6461,7 @@ JITCFlow ppc_opc_gen_vminfp()
 #define RND_MINF	0x0400	// round to -INF
 
 /** This functionality was borrowed from glibc 2.3.3 */
-static inline void set_roundmode(int mode)
+static void set_roundmode(int mode)
 {
 	modrm_o modrm;
 
@@ -6472,7 +6486,7 @@ static inline void set_roundmode(int mode)
 	asmFLDCW(modrm);
 }
 
-static inline void restore_roundmode(void)
+static void restore_roundmode(void)
 {
 	modrm_o modrm;
 
@@ -6496,7 +6510,7 @@ void ppc_opc_vrfin()
 	 * This is covered by the function rint()
 	 */
 	for (int i=0; i<4; i++) { //FIXME: This might not comply with Java FP
-		gCPU.vr[vrD].f[i] = rintf(gCPU.vr[vrB].f[i]);
+		gCPU.vr[vrD].f[i] = floor(gCPU.vr[vrB].f[i] + 0.5f);
 	}
 }
 JITCFlow ppc_opc_gen_vrfin()
@@ -7159,7 +7173,7 @@ JITCFlow ppc_opc_gen_vctuxs()
 #endif
 }
 
-static inline void commutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB)
+static void commutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB)
 {
 	NativeVectorReg d, s;
 	modrm_o modrm;
@@ -7191,7 +7205,7 @@ static inline void commutative_operation(X86ALUPSopc opc, int vrD, int vrA, int 
 		asmALUPS(opc, d, s);
 }
 
-static inline void commutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB)
+static void commutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB)
 {
 	NativeVectorReg d, s;
 	modrm_o modrm;
@@ -7223,7 +7237,7 @@ static inline void commutative_operation(X86PALUopc opc, int vrD, int vrA, int v
 		asmPALU(opc, d, s);
 }
 
-static inline void noncommutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB)
+static void noncommutative_operation(X86ALUPSopc opc, int vrD, int vrA, int vrB)
 {
 	NativeVectorReg d, s;
 	modrm_o modrm;
@@ -7255,7 +7269,7 @@ static inline void noncommutative_operation(X86ALUPSopc opc, int vrD, int vrA, i
 		jitcRenameVectorRegisterDirty(d, vrD);
 }
 
-static inline void noncommutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB)
+static void noncommutative_operation(X86PALUopc opc, int vrD, int vrA, int vrB)
 {
 	NativeVectorReg d, s;
 	modrm_o modrm;

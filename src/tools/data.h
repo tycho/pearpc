@@ -280,18 +280,18 @@ public:
 		Object *	operator [] (int idx) const;
 };
 
-#define foreach(XTYPE, X, E, code...)\
+#define foreach(XTYPE, X, E, ...)\
 for (ObjHandle temp0815 = (E).findFirst(); temp0815 != InvObjHandle;) {\
 	XTYPE *X = (XTYPE*)(E).get(temp0815);                          \
 	temp0815 = (E).findNext(temp0815);                             \
-	{code;}                                                        \
+	{__VA_ARGS__;}                                                        \
 }
 
-#define foreachbwd(XTYPE, X, E, code...)\
+#define foreachbwd(XTYPE, X, E, ...)\
 for (ObjHandle temp0815 = (E).findLast(); temp0815 != InvObjHandle;) {\
 	XTYPE *X = (XTYPE*)(E).get(temp0815);                         \
 	temp0815 = (E).findPrev(temp0815);                            \
-	{code;}                                                       \
+	{__VA_ARGS__;}                                                       \
 }
 
 #define firstThat(XTYPE, X, E, condition) \
@@ -502,7 +502,7 @@ private:
 	virtual	void		checkShrink();
 	virtual	void		freeObj(Object *obj);
 		void		prepareWriteAccess(int i);
-		void		realloc(int n);
+		void		resize(int n);
 	inline	bool		validHandle(ObjHandle h) const;
 	inline	uint		handleToNative(ObjHandle h) const;
 	inline	ObjHandle	nativeToHandle(uint i) const;

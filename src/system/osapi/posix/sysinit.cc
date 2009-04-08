@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <signal.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -35,3 +37,5 @@ bool initOSAPI()
 void doneOSAPI()
 {
 }
+
+#endif

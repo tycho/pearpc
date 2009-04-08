@@ -1135,10 +1135,16 @@ void receive_atapi_packet()
 	{
 		IO_IDE_TRACE("BM IDE transfer: prd_addr = %08x, lba = %08x, size = %08x\n", bmide_prd_addr, lba, count ? count : mpIDEState->state[mpIDEState->drive].sector_count);
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 		struct prd_entry {
 			uint32 addr PACKED;
 			uint32 size PACKED;
 		};
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 		prd_entry prd;
 		if (!ppc_dma_read(&prd, prd_addr, 8)) return false;
@@ -1154,19 +1160,21 @@ void receive_atapi_packet()
 			int to_transfer = mpIDEState->state[mpIDEState->drive].current_sector_size;
 			int transfer_at_once = to_transfer;
 			if (transfer_at_once > pr_left) transfer_at_once = pr_left;
+			uint8 *buffer = new uint8[transfer_at_once];
 			do {
-				uint8 buffer[transfer_at_once];
 				if (write_to_device) {
 					ppc_dma_read(buffer, prd.addr, transfer_at_once);
 					if (mpIDEState->config[mpIDEState->drive].device->write(buffer, transfer_at_once) != transfer_at_once) {
 						mpIDEState->config[mpIDEState->drive].device->release();
 						IO_IDE_WARN("write failed!\n");
+						delete [] buffer;
 						return false;
 					}
 				} else {
 					if (mpIDEState->config[mpIDEState->drive].device->read(buffer, transfer_at_once) != transfer_at_once) {
 						mpIDEState->config[mpIDEState->drive].device->release();
 						IO_IDE_WARN("read failed!\n");
+						delete [] buffer;
 						return false;
 					}
 					ppc_dma_write(prd.addr, buffer, transfer_at_once);
@@ -1177,6 +1185,7 @@ void receive_atapi_packet()
 				if (pr_left < 0) {
 					mpIDEState->config[mpIDEState->drive].device->release();
 					IO_IDE_WARN("pr_left became negative!\n");
+					delete [] buffer;
 					return false;
 				}
 				if (!pr_left) {
@@ -1191,6 +1200,7 @@ void receive_atapi_packet()
 						if (to_transfer || ready) {
 							mpIDEState->config[mpIDEState->drive].device->release();
 							IO_IDE_WARN("no more prd's, but still something to transfer\n");
+							delete [] buffer;
 							return false;
 						}
 						prd_exhausted = true;
@@ -1199,6 +1209,7 @@ void receive_atapi_packet()
 						prd_addr += 8;
 						if (!ppc_dma_read(&prd, prd_addr, 8)) {
 							mpIDEState->config[mpIDEState->drive].device->release();
+							delete [] buffer;
 							return false;
 						}
 						prd.addr = ppc_word_from_LE(prd.addr);
@@ -1210,6 +1221,7 @@ void receive_atapi_packet()
 					}
 				}
 			} while (to_transfer);
+			delete [] buffer;
 			if (count) {
 				count--;
 				if (!count) break;

@@ -60,7 +60,7 @@ uint32 gBreakpoint = 0x11b3acf4&0;
 uint32 gBreakpoint2 = 0xc017a4f4&0;
 
 bool activate = false;
-static inline void ppc_debug_hook()
+static void ppc_debug_hook()
 {
 	if (gCPU.pc == gBreakpoint) {
 		gSinglestep = true;

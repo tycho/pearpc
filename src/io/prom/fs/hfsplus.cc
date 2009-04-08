@@ -42,18 +42,33 @@ extern "C" {
 
 typedef uint32	HFSCatalogNodeID;
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct HFSPlusExtentDescriptor {
         uint32                  startBlock;
 	uint32                  blockCount;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct HFSPlusForkData {
 	uint64                  logicalSize;
         uint32                  clumpSize;
         uint32                  totalBlocks;
 	HFSPlusExtentDescriptor	extents[8];
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct HFSPlusVolumeHeader {
 	uint16		signature;
 	uint16		version;
@@ -89,6 +104,9 @@ struct HFSPlusVolumeHeader {
 	HFSPlusForkData     attributesFile;
         HFSPlusForkData     startupFile;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 byte HFSPlusVolumeHeader_struct[]= {
 	   STRUCT_ENDIAN_16 | STRUCT_ENDIAN_HOST,

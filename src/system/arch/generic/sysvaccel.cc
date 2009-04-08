@@ -20,13 +20,13 @@
 
 #include "stdafx.h"
 
-#ifndef TARGET_CPU_X86
+#if !defined(TARGET_CPU_X86) || !defined(TARGET_COMPILER_GCC)
 
 #include "system/sysvaccel.h"
 
 #include "tools/snprintf.h"
 
-static inline void convertBaseColor(uint &b, uint fromBits, uint toBits)
+static void convertBaseColor(uint &b, uint fromBits, uint toBits)
 {
 	if (toBits > fromBits) {
 		b <<= toBits - fromBits;

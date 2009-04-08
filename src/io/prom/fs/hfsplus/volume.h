@@ -74,7 +74,7 @@ void volume_initfork(volume* vol, hfsp_fork_raw* f, UInt16 fork_type);
 extern void volume_create_extents_tree(volume* vol);
 
 /* accessor for entends btree, is created on demand */
-static inline btree* volume_get_extents_tree(volume* vol) 
+static btree* volume_get_extents_tree(volume* vol) 
 {
     if (!vol->extents)
 	volume_create_extents_tree(vol);

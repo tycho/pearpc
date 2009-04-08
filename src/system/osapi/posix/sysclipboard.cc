@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include "system/sys.h"
 
 static bool open_clipboard()
@@ -45,3 +47,5 @@ bool sys_read_data_from_native_clipboard(void *data, int max_size)
 {
 	return false;
 }
+
+#endif

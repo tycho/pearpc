@@ -269,7 +269,7 @@ bool Win32Display::changeResolution(const DisplayCharacteristics &aClientChar)
 
 int Win32Display::toString(char *buf, int buflen) const
 {
-	return snprintf(buf, buflen, "Win32");
+	return sprintf_s(buf, buflen, "Win32");
 }
 
 void Win32Display::finishMenu()
@@ -424,12 +424,15 @@ void Win32Display::initCursor()
 	int cx = GetSystemMetrics(SM_CXCURSOR); 
 	int cy = GetSystemMetrics(SM_CYCURSOR); 
 
-	BYTE andplane[cx*cy];
-	BYTE xorplane[cx*cy];
+	BYTE *andplane = new BYTE[cx*cy];
+	BYTE *xorplane = new BYTE[cx*cy];
 
 	memset(andplane, 0xff, cx*cy);
 	memset(xorplane, 0, cx*cy);
 	mInvisibleCursor = CreateCursor(NULL, 0, 0, cx, cy, andplane, xorplane);
+
+	delete [] andplane;
+	delete [] xorplane;
 }
 
 void Win32Display::showCursor(bool visible)

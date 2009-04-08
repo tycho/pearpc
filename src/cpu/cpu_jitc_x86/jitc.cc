@@ -156,7 +156,7 @@ static void inline jitcUnmapClientPage(ClientPage *cp)
  *	Moves client page to the end of the LRU list
  *	page *must* be in LRU list before
  */
-extern "C" FASTCALL ClientPage *jitcTouchClientPage(ClientPage *cp)
+extern "C" ClientPage *jitcTouchClientPage(ClientPage *cp)
 {
 	if (cp->moreRU) {
 		// there's a page which is used more recently
@@ -297,7 +297,7 @@ static TranslationCacheFragment *jitcAllocFragment()
  *	Moves page from freeClientPages at the end of the LRU list if there's
  *	a free page or destroys the LRU page and touches it
  */
-extern "C" ClientPage FASTCALL *jitcCreateClientPage(uint32 baseaddr)
+extern "C" ClientPage *jitcCreateClientPage(uint32 baseaddr)
 {
 	ClientPage *cp;
 	if (gJITC.freeClientPages) {
@@ -331,7 +331,7 @@ extern "C" ClientPage FASTCALL *jitcCreateClientPage(uint32 baseaddr)
  *	Returns the ClientPage which maps to baseaddr or
  *	creates a new page that maps to baseaddr
  */
-ClientPage FASTCALL *jitcGetOrCreateClientPage(uint32 baseaddr)
+ClientPage *jitcGetOrCreateClientPage(uint32 baseaddr)
 {
 	ClientPage *cp = gJITC.clientPages[baseaddr >> 12];
 	if (cp) {
@@ -341,12 +341,12 @@ ClientPage FASTCALL *jitcGetOrCreateClientPage(uint32 baseaddr)
 	}
 }
 
-static inline void jitcCreateEntrypoint(ClientPage *cp, uint32 ofs)
+static void jitcCreateEntrypoint(ClientPage *cp, uint32 ofs)
 {
 	cp->entrypoints[ofs >> 2] = cp->tcp;
 }
 
-static inline NativeAddress jitcGetEntrypoint(ClientPage *cp, uint32 ofs)
+static NativeAddress jitcGetEntrypoint(ClientPage *cp, uint32 ofs)
 {
 	return cp->entrypoints[ofs >> 2];
 }

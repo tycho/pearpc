@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include <sys/time.h>
@@ -236,7 +238,7 @@ static void handleX11Event(const XEvent &event)
 	}
 }
 
-static inline bool checkHandleX11Event()
+static bool checkHandleX11Event()
 {
 	XEvent event;
 	uint xevmask = KeyPressMask | KeyReleaseMask | ExposureMask
@@ -343,3 +345,5 @@ void doneUI()
 {
 	XCloseDisplay(gX11Display);
 }
+
+#endif

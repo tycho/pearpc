@@ -21,6 +21,8 @@
 #ifndef __SYSX11_H__
 #define __SYSX11_H__
 
+#ifndef TARGET_COMPILER_VC
+
 #include <X11/Xlib.h>
 
 #include "system/systhread.h"
@@ -28,5 +30,7 @@
 extern sys_mutex	gX11Mutex;
 extern Display *	gX11Display;
 extern Window		gX11Window;
+
+#endif
 
 #endif

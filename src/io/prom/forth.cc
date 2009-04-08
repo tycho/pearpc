@@ -207,11 +207,6 @@ bool ForthVM::getChar()
 	return true;
 }
 
-String &ForthVM::getToken(const String &delimiters)
-{
-	
-}
-
 bool ForthVM::consumeSpace(bool except)
 {
 	return false;	
@@ -442,6 +437,7 @@ ForthWordAlias::ForthWordAlias(const char *name, int n, ...)
 	:ForthWord(name)
 {
 	va_list ap;
+	va_start (ap, n);
 	mFCodes = (uint16*)malloc(n*sizeof (uint16));
 	for (int i=0; i<n; i++) {
 		mFCodes[i] = va_arg(ap, int);
@@ -532,18 +528,6 @@ void ForthWordString::interprete(ForthVM &vm)
 
 ForthVar::ForthVar(const char *name, uint32 address)
 	: ForthWord(name)
-{
-}
-
-void ForthVar::compile(ForthVM &vm)
-{
-}
-
-uint32 ForthVar::getExecToken(ForthVM &vm)
-{
-}
-
-void ForthVar::interprete(ForthVM &vm)
 {
 }
 

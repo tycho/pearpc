@@ -50,11 +50,11 @@
 
 #include "cuda.h"
 
-//#define IO_CUDA_TRACE2(str...) ht_printf(str)
-#define IO_CUDA_TRACE2(str...) 
+//#define IO_CUDA_TRACE2(...) ht_printf(__VA_ARGS__)
+#define IO_CUDA_TRACE2(...) 
 
-//#define IO_CUDA_TRACE3(str...) ht_printf(str)
-#define IO_CUDA_TRACE3(str...) 
+//#define IO_CUDA_TRACE3(...) ht_printf(__VA_ARGS__)
+#define IO_CUDA_TRACE3(...) 
 
 #define RS		(0x200)
 #define B		0		/* B-side data */

@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cstdlib>
 
 #include "system/systhread.h"
@@ -43,3 +45,5 @@ SystemMouse *allocSystemMouse()
 	if (gMouse) return NULL;
 	return new X11SystemMouse();
 }
+
+#endif

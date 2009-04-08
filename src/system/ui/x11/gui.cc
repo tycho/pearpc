@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include "tools/data.h"
 #include "system/ui/gui.h"
 
@@ -36,3 +38,5 @@ int sys_gui_messagebox(const String &title, const String &text, int buttons)
 {
 	return 0;	
 }
+
+#endif

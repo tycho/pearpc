@@ -23,20 +23,20 @@
 #include "tools/except.h"
 #include "debug/stdfuncs.h"
 
-#define declareIntOperator1(NAME, CODE...) \
+#define declareIntOperator1(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_INTEGER;}\
 virtual	SInt64 *	evalInteger() const\
 {\
 	sint64 arg0 = ((Function *)mArgs[0])->evalInteger()->value;\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 
 /**/
-#define declareIntOperator2(NAME, CODE...) \
+#define declareIntOperator2(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_INTEGER;}\
@@ -44,13 +44,13 @@ virtual	SInt64 *	evalInteger() const\
 {\
 	sint64 arg0 = ((Function *)mArgs[0])->evalInteger()->value;\
 	sint64 arg1 = ((Function *)mArgs[1])->evalInteger()->value;\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 
 /**/
-#define declareFloatOperator2(NAME, CODE...) \
+#define declareFloatOperator2(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_FLOAT;}\
@@ -58,26 +58,26 @@ virtual	Float *		evalFloat() const\
 {\
 	double arg0 = ((Function *)mArgs[0])->evalFloat()->value;\
 	double arg1 = ((Function *)mArgs[1])->evalFloat()->value;\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 
 /**/
-#define declareFloatOperator1(NAME, CODE...) \
+#define declareFloatOperator1(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_FLOAT;}\
 virtual	Float *		evalFloat() const\
 {\
 	double arg0 = ((Function *)mArgs[0])->evalFloat()->value;\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 
 /**/
-#define declareIntFuncFloatFloat(NAME, CODE...) \
+#define declareIntFuncFloatFloat(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_INTEGER;}\
@@ -85,13 +85,13 @@ virtual	SInt64 *	evalInteger() const\
 {\
 	double arg0 = ((Function *)mArgs[0])->evalFloat()->value;\
 	double arg1 = ((Function *)mArgs[1])->evalFloat()->value;\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 
 /**/
-#define declareStrOperator2(NAME, CODE...) \
+#define declareStrOperator2(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_STRING;}\
@@ -99,13 +99,13 @@ virtual	String *	evalString() const\
 {\
 	String *arg0 = ((Function *)mArgs[0])->evalString();\
 	String *arg1 = ((Function *)mArgs[1])->evalString();\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }
 /**/
 
-#define declareIntFuncStrStr(NAME, CODE...) \
+#define declareIntFuncStrStr(NAME, ...) \
 class NAME: public PFunction {\
 public:\
 virtual	EvalType	getReturnType() const {	return ET_INTEGER;}\
@@ -113,7 +113,7 @@ virtual	SInt64 *	evalInteger() const\
 {\
 	String *arg0 = ((Function *)mArgs[0])->evalString();\
 	String *arg1 = ((Function *)mArgs[1])->evalString();\
-	CODE\
+	__VA_ARGS__\
 }\
 };\
 static Function *create##NAME() { return new NAME(); }

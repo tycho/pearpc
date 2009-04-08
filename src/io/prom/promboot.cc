@@ -22,9 +22,11 @@
 #include "stdafx.h"
 
 #include <cstring>
+#ifndef TARGET_COMPILER_VC
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
 
 #include "debug/tracers.h"
 #include "tools/debug.h"
@@ -219,6 +221,9 @@ struct MachOPPCThreadState {
 	uint32 vrsave;		/* Vector Save Register */
 };
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 typedef struct COFF_HEADER {
 	uint16 machine PACKED;
 	uint16 section_count PACKED;
@@ -228,6 +233,9 @@ typedef struct COFF_HEADER {
 	uint16 optional_header_size PACKED;
 	uint16 characteristics PACKED;
 };
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 byte COFF_HEADER_struct[] = {
 	STRUCT_ENDIAN_16 | STRUCT_ENDIAN_HOST,
@@ -242,6 +250,9 @@ byte COFF_HEADER_struct[] = {
 
 #define COFF_SIZEOF_SHORT_NAME			8
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct COFF_SECTION_HEADER {
 	byte name[COFF_SIZEOF_SHORT_NAME];
 	uint32 data_vsize;	// or data_phys_address !
@@ -254,6 +265,9 @@ struct COFF_SECTION_HEADER {
 	uint16 linenumber_count;
 	uint32 characteristics;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 byte COFF_SECTION_HEADER_struct[] = {
 	COFF_SIZEOF_SHORT_NAME,
@@ -1538,7 +1552,7 @@ bool prom_user_boot_partition(File *&ret_file, uint32 &size, bool &direct, uint3
 		if (gPromBootMethod == prombmSelect) {
 			gDisplay->printf("\nYour choice (ESC abort):");
 			while (1) {
-				gDisplay->printf("\r\e[0K\rYour choice (ESC abort): %d", choice);
+				gDisplay->printf("\r\033[0K\rYour choice (ESC abort): %d", choice);
 				uint32 keycode;
 				do {
 					while (!cuda_prom_get_key(keycode)) sys_suspend();

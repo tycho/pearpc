@@ -136,7 +136,7 @@ void ppc_opc_gen_check_privilege()
 	}
 }
 
-static inline void ppc_opc_gen_set_pc_rel(uint32 li)
+static void ppc_opc_gen_set_pc_rel(uint32 li)
 {
 	li += gJITC.pc;
 	if (li < 4096) {
@@ -1390,7 +1390,7 @@ JITCFlow ppc_opc_gen_mtmsr()
 }
 
 
-static inline void ppc_opc_batu_helper(bool dbat, int idx)
+static void ppc_opc_batu_helper(bool dbat, int idx)
 {
 	if (dbat) {
 		gCPU.dbat_bl[idx] = ((~gCPU.dbatu[idx] << 15) & 0xfffe0000);
@@ -1402,7 +1402,7 @@ static inline void ppc_opc_batu_helper(bool dbat, int idx)
 	}
 }
 
-static inline void ppc_opc_batl_helper(bool dbat, int idx)
+static void ppc_opc_batl_helper(bool dbat, int idx)
 {
 	if (dbat) {
 		gCPU.dbat_brpn[idx] = (gCPU.dbatl[idx] & gCPU.dbat_bl[idx]);
@@ -1593,7 +1593,7 @@ static void FASTCALL ppc_mmu_set_sdr1_check_error(uint32 newsdr1)
 	}
 }
 
-static inline void ppc_opc_gen_batu_helper(bool dbat, int idx)
+static void ppc_opc_gen_batu_helper(bool dbat, int idx)
 {
 	NativeReg tmp = jitcAllocRegister();
 	NativeReg reg = jitcGetClientRegister(dbat ? PPC_DBATU(idx) : PPC_IBATU(idx));
@@ -1619,7 +1619,7 @@ static inline void ppc_opc_gen_batu_helper(bool dbat, int idx)
 	asmMOVDMemReg(dbat ? (uint32)&gCPU.dbat_nbl[idx] : (uint32)&gCPU.ibat_nbl[idx], reg);
 }
 
-static inline void ppc_opc_gen_batl_helper(bool dbat, int idx)
+static void ppc_opc_gen_batl_helper(bool dbat, int idx)
 {
 	byte modrm[6];
 

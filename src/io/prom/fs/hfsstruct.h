@@ -23,6 +23,10 @@
 
 #define HFSSigWord		MAGIC16("BD")
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
+
 struct HFSExtentDescriptor {
 	uint16 startBlock;
 	uint16 blockCount;
@@ -182,6 +186,10 @@ struct HFSCatDataRec {
 		} fileThreadRec;
 	};
 } PACKED;
+#endif
+
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
 #endif
 
 #endif

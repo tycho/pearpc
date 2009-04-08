@@ -37,6 +37,9 @@
 #define NUM_INTS 32		/* part of the OHCI standard */
 #define MAX_ROOT_PORTS	15	/* maximum OHCI root hub ports */
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct ohci_hcca {
 	uint32	int_table[NUM_INTS];	/* Interrupt ED table */
 	uint16	frame_no;		/* current frame number */
@@ -44,6 +47,9 @@ struct ohci_hcca {
 	uint32	done_head;		/* info returned for an interrupt */
 	uint8	reserved_for_hc[116];
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 // [1].122
 #define OHCI_REG_REVISION	0x00	// [1].123
@@ -156,7 +162,7 @@ struct ohci_hcregs {
 	} roothub;
 };
  
-static inline const char *hc_regname(uint32 a)
+static const char *hc_regname(uint32 a)
 {
 	a >>= 2;
 	if (a > 20) return "unknown";

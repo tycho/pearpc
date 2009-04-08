@@ -197,7 +197,7 @@ int CDROMDevice::getFeature(byte *buf, int aLen, int feature)
 	switch (feature) {
 	case MM_DEVICE_FEATURE_PROFILE: {
 		int count = mProfiles->count();
-		byte list[count*4];
+		byte list[32 * 4];
 		int idx = 0;
 		// FIXME: foreachbwd ??
 		foreach(UInt, p, *mProfiles, {
@@ -207,7 +207,7 @@ int CDROMDevice::getFeature(byte *buf, int aLen, int feature)
 			list[idx++] = (v == curProfile) ? 0x01 : 0x00;
 			list[idx++] = 0x00;
 		});
-		return createFeature(buf, aLen, MM_DEVICE_FEATURE_PROFILE, 0, true, true, list, count*4);
+		return createFeature(buf, aLen, MM_DEVICE_FEATURE_PROFILE, 0, true, true, list, 32 * 4);
 	}
 	case MM_DEVICE_FEATURE_CORE: {
 		byte core[] = {0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00}; // 02=ATAPI, DBEvent=0

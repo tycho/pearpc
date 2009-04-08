@@ -25,17 +25,41 @@
 
 static inline FUNCTION_CONST uint32 ppc_bswap_word(uint32 data)
 {
+#ifdef TARGET_COMPILER_VC
+	/* This could be slow, as each instruction depends on the
+	 * previous to finish.
+	 *
+	 * Consider this instead:
+	(((x) << 24) & 0xff000000)  \
+                    | (((x) << 8) & 0xff0000)   \
+                    | (((x) >> 8) & 0xff00)     \
+                    | (((x) >> 24) & 0xff )
+	*/
+	data = (((data) << 24) & 0xff000000)
+                    | (((data) << 8) & 0xff0000)
+                    | (((data) >> 8) & 0xff00)
+                    | (((data) >> 24) & 0xff );
+#else
 	asm (
 		"bswap %0": "=r" (data) : "0" (data)
 	);
+#endif
 	return data;
 }
 
 static inline FUNCTION_CONST uint16 ppc_bswap_half(uint16 data) 
 {
+#ifdef TARGET_COMPILER_VC
+	__asm {
+		movzx eax, data
+		xchg al, ah
+		mov data, ax
+	}
+#else
 	asm (
 		"xchgb %b0,%h0": "=q" (data): "0" (data)
 	);
+#endif
 	return data;
 }
 

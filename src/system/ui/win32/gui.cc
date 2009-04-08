@@ -77,7 +77,7 @@ bool sys_gui_open_file_dialog(String &ret, const String &title, const String &fi
 
 int sys_gui_messagebox(const String &title, const String &text, int buttons)
 {
-	
+	return 0;
 }
 
 #endif

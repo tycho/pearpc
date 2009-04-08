@@ -258,7 +258,7 @@ static void ppc_opc_init_group2()
 }
 
 // main opcode 31
-inline static void ppc_opc_group_2()
+static void ppc_opc_group_2()
 {
 	uint32 ext = PPC_OPC_EXT(gCPU.current_opc);
 	if (ext >= (sizeof ppc_opc_table_group2 / sizeof ppc_opc_table_group2[0])) {

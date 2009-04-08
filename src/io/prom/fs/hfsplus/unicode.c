@@ -30,123 +30,6 @@
 
 #include "unicode.h"
 
-/* convert the asci string astr into a unicode string given by ustr.
- *
- * ToDo: Think about better error handling ?
- */
-
-int unicode_asc2uni(hfsp_unistr255 *ustr, const char* astr)
-{
-#ifndef WIN32
-    mbstate_t	    mbstate	= { 0 };    /* Multibyte state */
-    UInt16*	    name	= ustr->name;
-    int		    total	= 0;
-    wchar_t	    wc;
-    int		    len;
-    while (*astr && total < 255) 
-    {
-	len = mbrtowc(&wc, astr, MB_CUR_MAX, &mbstate);
-	if (!len)	// eof
-	    break;
-	if (len < 0)	// error
-	    continue;
-	astr  ++;
-	total += len;
-	*name ++= wc;
-    }
-    return ustr->strlen = total;
-#else
-    return ustr->strlen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, astr, -1, ustr, 254);
-#endif
-}
-
-/* Convert an unicode string ustr to a ascii string astr of given maximum len.
- *
- * returns actual length of convertet string. 
- * Eventual conversion errors are ignored. 
- */
-
-int unicode_uni2asc(char *astr, const hfsp_unistr255 *ustr, int maxlen)
-{
-#ifndef WIN32
-    mbstate_t	    mbstate	= { 0 };    /* Multibyte state */
-    int		    strlen	= ustr->strlen;
-    const UInt16*   name	= ustr->name;
-    int		    len;
-    int		    total;
-
-    maxlen -= (MB_CUR_MAX + 1);	// leave space for a '\0' and overflow
-    total = 0;
-
-    while ((strlen > 0) && (maxlen > 0))
-    {
-	wchar_t wc = *name++;
-	len = wcrtomb(astr, wc, &mbstate);  
-	strlen--;
-	if (len < 0) // ignore error ...
-	    continue;
-	maxlen -= len;
-	astr   += len;
-	total  += len;
-    }
-    wcrtomb(astr, 0, &mbstate);	// care about rest of state
-    *astr ='\0';
-
-    return total;
-#else
-    int total = WideCharToMultiByte(CP_ACP, WC_SEPCHARS, ustr, ustr->strlen, astr, maxlen-1, NULL, NULL);
-    *(astr+total) = '\0';
-    return total;
-#endif
-}
-
-/* The following code is almost as published by Apple, only
-   small modifications where made to match some linux styles ...
-
-fastUnicodeCompare - Compare two Unicode strings; produce a relative ordering
-*/
-
-static UInt16 gLowerCaseTable[];
-
-SInt32 fast_unicode_compare ( const hfsp_unistr255 *ustr1, 
-			      const hfsp_unistr255 *ustr2)
-{
-    register UInt16     c1,c2;
-    register SInt32	diff;
-    register UInt16     temp;
-    register UInt16	length1 = ustr1->strlen;
-    register UInt16	length2 = ustr2->strlen;
-    register UInt16*    lowerCaseTable = gLowerCaseTable;
-    register UInt16*	str1 = ustr1->name;
-    register UInt16*	str2 = ustr2->name;
-
-    while (1) {
-        //  Set default values for c1, c2 in case there are no more valid chars
-        c1 = c2 = 0;
-        //  Find next non-ignorable char from str1, or zero if no more
-        while (length1 && c1 == 0) {
-            c1 = *(str1++);
-            --length1;
-            if ((temp = lowerCaseTable[c1>>8]) != 0)        //  is there a subtable
-                                                            //  for this upper byte?
-                c1 = lowerCaseTable[temp + (c1 & 0x00FF)];  //  yes, so fold the char
-        }
-        //  Find next non-ignorable char from str2, or zero if no more
-        while (length2 && c2 == 0) {
-            c2 = *(str2++);
-            --length2;
-            if ((temp = lowerCaseTable[c2>>8]) != 0)        //  is there a subtable
-                                                            //  for this upper byte?
-                c2 = lowerCaseTable[temp + (c2 & 0x00FF)];  //  yes, so fold the char
-        }
-	diff = c2-c1;
-        if (diff)       //  found a difference, so stop looping
-            break;
-        if (c1 == 0)        //  did we reach the end of both strings at the same time?
-            return 0;       //  yes, so strings are equal
-    }
-    return diff;
-}
 
 
 /*  The lower case table consists of a 256-entry high-byte table followed by
@@ -544,3 +427,119 @@ static UInt16 gLowerCaseTable[] = {
     /* F */ 0xFFF0, 0xFFF1, 0xFFF2, 0xFFF3, 0xFFF4, 0xFFF5, 0xFFF6, 0xFFF7,
             0xFFF8, 0xFFF9, 0xFFFA, 0xFFFB, 0xFFFC, 0xFFFD, 0xFFFE, 0xFFFF,
 };
+
+/* convert the asci string astr into a unicode string given by ustr.
+ *
+ * ToDo: Think about better error handling ?
+ */
+
+int unicode_asc2uni(hfsp_unistr255 *ustr, const char* astr)
+{
+#ifndef WIN32
+    mbstate_t	    mbstate	= { 0 };    /* Multibyte state */
+    UInt16*	    name	= ustr->name;
+    int		    total	= 0;
+    wchar_t	    wc;
+    int		    len;
+    while (*astr && total < 255) 
+    {
+	len = mbrtowc(&wc, astr, MB_CUR_MAX, &mbstate);
+	if (!len)	// eof
+	    break;
+	if (len < 0)	// error
+	    continue;
+	astr  ++;
+	total += len;
+	*name ++= wc;
+    }
+    return ustr->strlen = total;
+#else
+    return ustr->strlen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, astr, -1, ustr, 254);
+#endif
+}
+
+/* Convert an unicode string ustr to a ascii string astr of given maximum len.
+ *
+ * returns actual length of convertet string. 
+ * Eventual conversion errors are ignored. 
+ */
+
+int unicode_uni2asc(char *astr, const hfsp_unistr255 *ustr, int maxlen)
+{
+#ifndef WIN32
+    mbstate_t	    mbstate	= { 0 };    /* Multibyte state */
+    int		    strlen	= ustr->strlen;
+    const UInt16*   name	= ustr->name;
+    int		    len;
+    int		    total;
+
+    maxlen -= (MB_CUR_MAX + 1);	// leave space for a '\0' and overflow
+    total = 0;
+
+    while ((strlen > 0) && (maxlen > 0))
+    {
+	wchar_t wc = *name++;
+	len = wcrtomb(astr, wc, &mbstate);  
+	strlen--;
+	if (len < 0) // ignore error ...
+	    continue;
+	maxlen -= len;
+	astr   += len;
+	total  += len;
+    }
+    wcrtomb(astr, 0, &mbstate);	// care about rest of state
+    *astr ='\0';
+
+    return total;
+#else
+    int total = WideCharToMultiByte(CP_ACP, WC_SEPCHARS, ustr, ustr->strlen, astr, maxlen-1, NULL, NULL);
+    *(astr+total) = '\0';
+    return total;
+#endif
+}
+
+/* The following code is almost as published by Apple, only
+   small modifications where made to match some linux styles ...
+
+fastUnicodeCompare - Compare two Unicode strings; produce a relative ordering
+*/
+
+SInt32 fast_unicode_compare ( const hfsp_unistr255 *ustr1, 
+			      const hfsp_unistr255 *ustr2)
+{
+    register UInt16     c1,c2;
+    register SInt32	diff;
+    register UInt16     temp;
+    register UInt16	length1 = ustr1->strlen;
+    register UInt16	length2 = ustr2->strlen;
+    register UInt16*    lowerCaseTable = gLowerCaseTable;
+    register UInt16*	str1 = ustr1->name;
+    register UInt16*	str2 = ustr2->name;
+
+    while (1) {
+        //  Set default values for c1, c2 in case there are no more valid chars
+        c1 = c2 = 0;
+        //  Find next non-ignorable char from str1, or zero if no more
+        while (length1 && c1 == 0) {
+            c1 = *(str1++);
+            --length1;
+            if ((temp = lowerCaseTable[c1>>8]) != 0)        //  is there a subtable
+                                                            //  for this upper byte?
+                c1 = lowerCaseTable[temp + (c1 & 0x00FF)];  //  yes, so fold the char
+        }
+        //  Find next non-ignorable char from str2, or zero if no more
+        while (length2 && c2 == 0) {
+            c2 = *(str2++);
+            --length2;
+            if ((temp = lowerCaseTable[c2>>8]) != 0)        //  is there a subtable
+                                                            //  for this upper byte?
+                c2 = lowerCaseTable[temp + (c2 & 0x00FF)];  //  yes, so fold the char
+        }
+	diff = c2-c1;
+        if (diff)       //  found a difference, so stop looping
+            break;
+        if (c1 == 0)        //  did we reach the end of both strings at the same time?
+            return 0;       //  yes, so strings are equal
+    }
+    return diff;
+}

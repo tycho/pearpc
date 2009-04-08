@@ -152,7 +152,7 @@ int node_cache_init(node_cache* cache, btree* tree, int size)
 }
 
 /* Like cache->buffers[i], since size of node_buf is variable */
-static inline node_buf* node_buf_get(node_cache* cache, int i)
+static node_buf* node_buf_get(node_cache* cache, int i)
 {
     return (node_buf*) (cache->buffers + (i * cache->nodebufsize));
 }
@@ -171,7 +171,7 @@ static int btree_write_node(btree* bt, int index, char* nodebuf)
     }
     else // use nodeperblk, must reread other blocks, too
     {
-	char buf[bt->vol->blksize];
+	char *buf = malloc(bt->vol->blksize);
 	
 	UInt16	node_size = bt->head.node_size;
 	UInt16	offset    = (index % nodeperblk) * node_size;
@@ -180,13 +180,18 @@ static int btree_write_node(btree* bt, int index, char* nodebuf)
 	// read block including this one 
 	void* p  = volume_readfromfork(bt->vol, buf, bt->fork, 
 		     block, 1, HFSP_EXTENT_DATA, bt->cnid);
-	if (p != buf)	    // usually NULL
+    if (p != buf) {	    // usually NULL
+        free(buf);
 	    return -1;	    // evil ...
+    }
 	p = &nodebuf[offset];   // node is found at that offset
 	memcpy(p, nodebuf, node_size);
 	if (volume_writetofork(bt->vol, buf, bt->fork, 
-		     block, 1, HFSP_EXTENT_DATA, bt->cnid))
+        block, 1, HFSP_EXTENT_DATA, bt->cnid)) {
+        free(buf);
 	    return -1;	// evil ...
+        }
+	free(buf);
     }
     return 0; // all is fine
 }
@@ -270,19 +275,22 @@ static node_buf* node_cache_load_buf
     }
     else // use nodeperblk
     {
-	char buf[bt->vol->blksize];
+	char *buf = (char*)malloc(bt->vol->blksize);
 	
 	UInt16 node_size = bt->head.node_size;
 	UInt16 offset = node_index % nodeperblk * node_size;
 	block = node_index / nodeperblk;
 	p     = volume_readfromfork(bt->vol, buf, bt->fork, 
 		     block, 1, HFSP_EXTENT_DATA, bt->cnid);
-	if (p != buf)		// usually NULL
+    if (p != buf) {		// usually NULL
+        free(buf);
 	    return NULL;	// evil ...
+    }
 	p = &buf[offset];   // node is found at that offset
 	memcpy(&result->node, p , node_size);
 	btree_readnode(&result->desc, p);
 	
+    free(buf);
     }
 
     result->index   = node_index;
@@ -295,7 +303,7 @@ static node_buf* node_cache_load_buf
 
 /* Mark node at given index dirty in cache.
  */
-inline static void btree_dirty_node(btree* bt, UInt16 index)
+static void btree_dirty_node(btree* bt, UInt16 index)
 {
     node_cache*	cache	= &bt->cache;
     node_entry	*e	= &cache->entries[index];
@@ -367,7 +375,7 @@ node_buf* btree_node_by_index(btree* bt, UInt16 index, int flags)
 static int btree_init(btree* bt, volume* vol, hfsp_fork_raw* fork)
 { 
     char		*p;
-    char		buf[vol->blksize]; 
+    char		*buf = (char*)malloc(vol->blksize);
     UInt16		node_size;
     btree_node_desc*	node = &bt->head_node;
     int			alloc_size;
@@ -376,11 +384,15 @@ static int btree_init(btree* bt, volume* vol, hfsp_fork_raw* fork)
     bt->fork	= fork;
     p	= volume_readfromfork(vol, buf, fork, 0, 1,
 		 HFSP_EXTENT_DATA, bt->cnid);
-    if (!p)
+    if (!p) {
+        free(buf);
 	return -1;
+    }
     p = btree_readnode(node, p);
-    if (node->kind != HFSP_NODE_HEAD)
+    if (node->kind != HFSP_NODE_HEAD) {
+        free(buf);
 	return -1;   // should not happen ?
+    }
     p = btree_readhead(&bt->head, p);
     node_size	= bt->head.node_size;
 
@@ -393,26 +405,32 @@ static int btree_init(btree* bt, volume* vol, hfsp_fork_raw* fork)
     /* Sometimes the node_size is bigger than the volume-blocksize
      * so here I reread the node when needed */
     { // need new block for allocation
-	char nodebuf[node_size];
+	char *nodebuf = malloc(node_size);
 	if (bt->blkpernode > 1)
 	{
 	    p = volume_readfromfork(vol, nodebuf, fork, 0, bt->blkpernode,
 		 HFSP_EXTENT_DATA, bt->cnid);
 	    p += HEADER_RESERVEDOFFSET; // skip header
 	}
-	
+	free(nodebuf);
+
 	bt->alloc_bits = malloc(alloc_size);
-	if (!bt->alloc_bits)
+    if (!bt->alloc_bits) {
+        free(buf);
 	    return ENOMEM;
+    }
 	memcpy(bt->alloc_bits, p, alloc_size);
     }
 
     /*** for debugging ***/ 
     bt->attributes = 0;
 
-    if (node_cache_init(&bt->cache, bt, bt->head.depth + EXTRA_CACHESIZE))
+    if (node_cache_init(&bt->cache, bt, bt->head.depth + EXTRA_CACHESIZE)) {
+        free(buf);
 	return -1;
+    }
 
+    free(buf);
     return 0;
 }
 
@@ -461,13 +479,14 @@ int btree_close(btree* bt)
 	btree_node_desc*    node	= &bt->head_node;
 	UInt16		    node_size   = head->node_size; 
 	UInt16		    alloc_size  = node_size - HEADER_RESERVEDOFFSET; 
-	char		    buf[node_size];
+	char		    *buf = malloc(node_size);
 	void		    *p;
 	
 	p = btree_writenode(node, buf);
 	p = btree_writehead(head, p);
 	memcpy(p, bt->alloc_bits, alloc_size);
 	result = btree_write_node(bt, 0, buf);
+    free(buf);
     }
     if (bt->alloc_bits)
 	free(bt->alloc_bits);
@@ -626,7 +645,7 @@ int btree_insert_record(btree* bt, UInt16 node_index, UInt16 keyind,
     btree_node_desc*	desc    = &node->desc;
     int			num_rec = desc->num_rec;
     UInt16		node_size= bt->head.node_size;
-    void		*curr,*last;	// Pointer for calculations
+    char		*curr,*last;	// Pointer for calculations
     int			size, total; 
     int			i,n,off_pos;
     btree_record_offset* offsets;

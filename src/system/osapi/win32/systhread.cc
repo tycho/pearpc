@@ -135,6 +135,7 @@ void sys_exit_thread(void *ret)
 
 void *sys_join_thread(sys_thread t)
 {
+	return NULL;
 }
 
 #endif

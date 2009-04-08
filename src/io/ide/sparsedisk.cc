@@ -596,7 +596,7 @@ bool SparseDeviceFile::promSeek(FileOfs pos)
 
 uint SparseDeviceFile::promRead(byte *buf, uint size)
 {
-	byte temp[blocksize];
+	byte *temp = new byte[blocksize];
 	uint64 firstbyte;
 	uint64 origseek = currentseek;
 	uint done = 0;
@@ -625,6 +625,8 @@ uint SparseDeviceFile::promRead(byte *buf, uint size)
 		done += bytes;
 		buf += bytes;
 	}
+
+	delete [] temp;
 	
 	// restore and update currentseek
 	currentseek = origseek + done;

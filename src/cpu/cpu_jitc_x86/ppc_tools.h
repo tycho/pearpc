@@ -23,8 +23,9 @@
 
 #include "system/arch/sysendian.h"
 
-static inline __attribute__((const)) bool ppc_carry_3(uint32 a, uint32 b, uint32 c)
+static inline FUNCTION_CONST bool ppc_carry_3(uint32 a, uint32 b, uint32 c)
 {
+#ifdef TARGET_COMPILER_GCC
 	register uint8 t;
 	asm (
 		"addl %2, %1\n\t"
@@ -35,10 +36,19 @@ static inline __attribute__((const)) bool ppc_carry_3(uint32 a, uint32 b, uint32
 		:  "g" (b), "g" (c)
 	);
 	return t;
+#else
+	if ((a+b) < a) {
+		return true;
+	}
+	if ((a+b+c) < c) {
+		return true;
+	}
+	return false;
+#endif
 }
 /*
 equivalent C-construction:
-static inline __attribute__((const)) bool ppc_carry_3(uint32 a, uint32 b, uint32 c)
+static inline FUNCTION_CONST bool ppc_carry_3(uint32 a, uint32 b, uint32 c)
 {
 	if ((a+b) < a) {
 		return true;
@@ -50,7 +60,7 @@ static inline __attribute__((const)) bool ppc_carry_3(uint32 a, uint32 b, uint32
 }
 */
 
-static inline __attribute__((const)) uint32 ppc_word_rotl(uint32 data, int n)
+static inline FUNCTION_CONST uint32 ppc_word_rotl(uint32 data, int n)
 {
 	n &= 0x1f;
 	return (data << n) | (data >> (32-n));

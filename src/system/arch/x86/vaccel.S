@@ -18,6 +18,8 @@
  *	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "platform_detect.h"
+
 #ifndef ASM_FUNCTION_PREFIX
 #define ASM_FUNCTION_PREFIX
 #endif

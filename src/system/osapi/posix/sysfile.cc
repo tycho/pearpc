@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cerrno>
 #include <fcntl.h>
 #include <cstdio>
@@ -294,3 +296,5 @@ void sys_free_read_write_execute(void *p)
 {
 	// do nothing :(
 }
+
+#endif

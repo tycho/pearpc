@@ -74,10 +74,16 @@ static int gPhysMemoryLastpage;
 
 static int gPromMemStart, gPromMemEnd;
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct malloc_entry {
 	uint32 prev PACKED;
 	uint32 size PACKED;
 };
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 #define MALLOC_BLOCK_FREE (1<<31)
 #define MALLOC_BLOCK_GUARD (1)

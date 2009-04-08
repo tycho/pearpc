@@ -870,7 +870,7 @@ static void ppc_opc_gen_binary_floatop(X86FloatArithOp op, X86FloatArithOp rop, 
 	}
 }
 
-static inline void ppc_opc_gen_unary_floatop(X86FloatOp op, int frD, int frA)
+static void ppc_opc_gen_unary_floatop(X86FloatOp op, int frD, int frA)
 {
 	jitcClobberClientRegisterForFloat(frA);
 	jitcInvalidateClientRegisterForFloat(frD);

@@ -29,7 +29,9 @@
 #include <cstdlib>
 #include <sys/stat.h>	/* for mode definitions */
 #include <sys/types.h>	/* for mode definitions */
+#ifndef TARGET_COMPILER_VC
 #include <unistd.h>
+#endif
 
 #include "debug.h"
 #include "except.h"

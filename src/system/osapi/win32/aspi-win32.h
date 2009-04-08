@@ -105,6 +105,10 @@
 #define HASTAT_PARITY_ERROR       0x0F   /* A parity error was detected    */
 #define HASTAT_REQUEST_SENSE_FAILED 0x10 /* The adapter failed in issuing  */
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
+
 /***************************************************************************
  ** SRB - HOST ADAPTER INQUIRIY - SC_HA_INQUIRY (0)
  ***************************************************************************/
@@ -202,6 +206,10 @@ typedef struct tag_ASPI32BUFF
   DWORD     AB_ZeroFill;
   DWORD     AB_Reserved;
 } PACKED ASPI32BUFF, *PASPI32BUFF, FAR *LPASPI32BUFF;
+
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 typedef struct 
 {

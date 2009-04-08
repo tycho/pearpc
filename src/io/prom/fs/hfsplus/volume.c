@@ -170,7 +170,7 @@ int volume_allocated(volume* vol, UInt32 block)
     int	    bit		= block & 0x07;
     int	    mask,index;
     char*   bits;
-    char    buf[vol->blksize];
+    char    *buf = (char *)malloc(vol->blksize);
     
     // if (block >= vol->maxblocks)
     //	HFSP_ERROR(-1, "Allocation block out of range.");
@@ -182,7 +182,7 @@ int volume_allocated(volume* vol, UInt32 block)
 	    block, 1, HFSP_EXTENT_DATA, HFSP_ALLOC_CNID);
     if (!bits)
 	HFSP_ERROR(-1, "Allocation block not found !?");
-
+	free(buf);
     return (bits[index] & (0x80 >> bit)); /* Bit one is 0x80 ! */
     return 0;
 fail:
@@ -197,9 +197,9 @@ fail:
 int volume_allocate(volume* vol, UInt32 block)
 {
     int	    bit		= block & 0x07;
-    int	    mask,index;
+    int	    mask,index,ret;
     char*   bits;
-    char    buf[vol->blksize];
+    char    *buf = (char *)malloc(vol->blksize);
     int	    shift = 0x80 >> bit;    /* Bit one is 0x80 */
     
     // if (block >= vol->maxblocks)
@@ -216,8 +216,10 @@ int volume_allocate(volume* vol, UInt32 block)
     if (bits[index] & shift) 
 	HFSP_ERROR(-1, "volume_allocate: Block already allocated");
     bits[index] |= shift;
-    return volume_writetofork(vol, buf, &vol->vol.alloc_file, 
+    ret = volume_writetofork(vol, buf, &vol->vol.alloc_file, 
 	    block, 1, HFSP_EXTENT_DATA, HFSP_ALLOC_CNID);
+	free(buf);
+	return ret;
 fail:
     return -1;
 }
@@ -230,9 +232,9 @@ fail:
 int volume_deallocate(volume* vol, UInt32 block)
 {
     int	    bit		= block & 0x07;
-    int	    mask,index;
+    int	    mask,index,ret;
     char*   bits;
-    char    buf[vol->blksize];
+    char    *buf = (char *)malloc(vol->blksize);
     int	    shift = 0x80 >> bit;    /* Bit one is 0x80 */
     
     // if (block >= vol->maxblocks)
@@ -249,8 +251,10 @@ int volume_deallocate(volume* vol, UInt32 block)
     if (!(bits[index] & shift)) 
 	HFSP_ERROR(-1, "volume_allocate: Block already free");
     bits[index] &= ~shift;
-    return volume_writetofork(vol, buf, &vol->vol.alloc_file, 
+    ret = volume_writetofork(vol, buf, &vol->vol.alloc_file, 
 	    block, 1, HFSP_EXTENT_DATA, HFSP_ALLOC_CNID);
+	free(buf);
+	return ret;
 fail:
     return -1;
 }
@@ -418,20 +422,30 @@ static int volume_writebuf(hfsp_vh* vh, char* p)
 /* Read the volume from the given block */
 static int volume_read(volume * vol, hfsp_vh* vh, UInt32 block)
 {
-    char buf[vol->blksize];
+	int ret;
+    char *buf = (char *)malloc(vol->blksize);
     if (volume_readinbuf(vol, buf, block))
-	return -1;
-    return volume_readbuf(vh, buf);
+	{
+        ret = -1;
+        goto out;
+	}
+    ret = volume_readbuf(vh, buf);
+out:
+	free(buf);
+	return ret;
 }
 
 /* Find out whether the volume is wrapped and unwrap it eventually */
 static int volume_read_wrapper(volume * vol, hfsp_vh* vh)
 {
     UInt16  signature;
-    char    buf[vol->blksize];
+	int		ret;
+    char    *buf = (char *)malloc(vol->blksize);
     char    *p = buf;
-    if( volume_readinbuf(vol, buf, 2) ) // Wrapper or volume header starts here
-        return -1;
+    if( volume_readinbuf(vol, buf, 2) ) { // Wrapper or volume header starts here
+        ret = -1;
+        goto ok;
+    }
 
     signature	= bswabU16_inc(&p);
     if (signature == HFS_VOLHEAD_SIG)	/* Wrapper */
@@ -459,15 +473,18 @@ static int volume_read_wrapper(volume * vol, hfsp_vh* vh)
 	hfsp_set_offset(&vol->fd, hfsp_get_offset(&vol->fd)
 		+ (((APPLEUInt64) (drAlBlSt + embeds * sect_per_block)) << HFS_BLOCKSZ_BITS));
 	/* Now we can try to read the embedded HFS+ volume header */
-	return volume_read(vol,vh,2);
+	ret = volume_read(vol,vh,2);
     }
     else if (signature == HFSP_VOLHEAD_SIG) /* Native HFS+ volume */
     {
 	p = buf; // Restore to begin of block
-	return volume_readbuf(vh, p);
+	ret = volume_readbuf(vh, p);
     } else
 	 HFSP_ERROR(-1, "Neither Wrapper nor native HFS+ volume header found");
     
+ok:
+	free(buf);
+	return ret;
 fail:
     return -1;
 }

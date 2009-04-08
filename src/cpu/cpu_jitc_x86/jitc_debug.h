@@ -26,7 +26,15 @@
 static inline UNUSED uint64 jitcDebugGetTicks()
 {
 	uint32 s0, s1;
+#ifdef TARGET_COMPILER_VC
+	__asm {
+		rdtsc
+		mov s0, eax
+		mov s1, edx
+	}
+#else
 	asm("rdtsc" : "=a" (s0), "=d" (s1));
+#endif
 	return ((uint64)s1)<<32 | s0;
 }
 

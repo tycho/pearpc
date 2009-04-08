@@ -61,7 +61,7 @@ static char *symbol_lookup(CPU_ADDR addr, int *symstrlen, void *context)
 	}
 }
 
-inline static void disasmPPC(uint32 code, uint32 ea, char *result)
+static void disasmPPC(uint32 code, uint32 ea, char *result)
 {
 	PPCDisassembler dis;
 	CPU_ADDR addr;
@@ -70,7 +70,7 @@ inline static void disasmPPC(uint32 code, uint32 ea, char *result)
 	strcpy(result, dis.str(dis.decode((byte*)&code, 4, addr), 0));
 }
 
-inline static int disasmX86(const byte *code, uint32 ea, char *result)
+static int disasmX86(const byte *code, uint32 ea, char *result)
 {
 	X86Disassembler dis(X86_OPSIZE32, X86_ADDRSIZE32);
 	CPU_ADDR addr;

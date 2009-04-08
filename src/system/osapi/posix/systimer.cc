@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <signal.h>
 #include <time.h>
 #include <stdio.h>
@@ -277,3 +279,5 @@ void sys_get_time_string(char *str_buf)
 		tm->tm_hour, tm->tm_min, tm->tm_sec);
 #endif
 }
+
+#endif

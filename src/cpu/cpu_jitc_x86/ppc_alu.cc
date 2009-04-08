@@ -33,7 +33,7 @@
 #include "jitc_debug.h"
 #include "x86asm.h"
 
-static inline uint32 ppc_mask(int MB, int ME)
+static uint32 ppc_mask(int MB, int ME)
 {
 	uint32 mask;
 	if (MB <= ME) {

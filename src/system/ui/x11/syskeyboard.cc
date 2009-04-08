@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#ifndef TARGET_COMPILER_VC
+
 #include <cstdlib>
 
 #include "system/systhread.h"
@@ -51,3 +53,5 @@ SystemKeyboard *allocSystemKeyboard()
 	if (gKeyboard) return NULL;
 	return new X11SystemKeyboard();
 }
+
+#endif

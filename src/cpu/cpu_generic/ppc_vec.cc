@@ -31,11 +31,11 @@
  *	FIXME: put somewhere appropriate
  */
 #ifndef HAS_LOG2
-#define log2(x) log(x)/log(2)
+#define log2(x) log((float)(x))/log(2.0f)
 #endif /* HAS_LOG2 */ 
 
 #ifndef HAS_EXP2
-#define exp2(x)	pow(2, x)
+#define exp2(x)	pow(2.0f, (float)(x))
 #endif /* HAS_EXP2 */
 
 #include "debug/tracers.h"
@@ -46,10 +46,24 @@
 
 #define	SIGN32 0x80000000
 
+#ifdef TARGET_COMPILER_VC
+static float truncf(const float a)
+{
+    float result;
+    __asm {
+        cvttss2si   eax, dword ptr [a]
+        //cvttsd2si   eax, qword ptr [a] //for double values
+        //return float value. if you want to return an int, you're actually done already...
+        mov         dword ptr [result], eax
+        fld         dword ptr [result]
+    }
+}
+#endif
+
 /*	PACK_PIXEL	Packs a uint32 pixel to uint16 pixel
  *	v.219
  */
-static inline uint16 PACK_PIXEL(uint32 clr)
+static uint16 PACK_PIXEL(uint32 clr)
 {
 	return	(((clr & 0x000000f8) >> 3) | \
 		 ((clr & 0x0000f800) >> 6) | \
@@ -59,7 +73,7 @@ static inline uint16 PACK_PIXEL(uint32 clr)
 /*	UNPACK_PIXEL	Unpacks a uint16 pixel to uint32 pixel
  *	v.276 & v.279
  */
-static inline uint32 UNPACK_PIXEL(uint16 clr)
+static uint32 UNPACK_PIXEL(uint16 clr)
 {
 	return	(((uint32)(clr & 0x001f)) | \
 		 ((uint32)(clr & 0x03E0) << 3) | \
@@ -67,7 +81,7 @@ static inline uint32 UNPACK_PIXEL(uint16 clr)
 		 (((clr) & 0x8000) ? 0xff000000 : 0));
 }
 
-static inline uint8 SATURATE_UB(uint16 val)
+static uint8 SATURATE_UB(uint16 val)
 {
 	if (val & 0xff00) {
 		gCPU.vscr |= VSCR_SAT;
@@ -75,7 +89,7 @@ static inline uint8 SATURATE_UB(uint16 val)
 	}
 	return val;
 }
-static inline uint8 SATURATE_0B(uint16 val)
+static uint8 SATURATE_0B(uint16 val)
 {
 	if (val & 0xff00) {
 		gCPU.vscr |= VSCR_SAT;
@@ -84,7 +98,7 @@ static inline uint8 SATURATE_0B(uint16 val)
 	return val;
 }
 
-static inline uint16 SATURATE_UH(uint32 val)
+static uint16 SATURATE_UH(uint32 val)
 {
 	if (val & 0xffff0000) {
 		gCPU.vscr |= VSCR_SAT;
@@ -93,7 +107,7 @@ static inline uint16 SATURATE_UH(uint32 val)
 	return val;
 }
 
-static inline uint16 SATURATE_0H(uint32 val)
+static uint16 SATURATE_0H(uint32 val)
 {
 	if (val & 0xffff0000) {
 		gCPU.vscr |= VSCR_SAT;
@@ -102,7 +116,7 @@ static inline uint16 SATURATE_0H(uint32 val)
 	return val;
 }
 
-static inline sint8 SATURATE_SB(sint16 val)
+static sint8 SATURATE_SB(sint16 val)
 {
 	if (val > 127) {			// 0x7F
 		gCPU.vscr |= VSCR_SAT;
@@ -114,7 +128,7 @@ static inline sint8 SATURATE_SB(sint16 val)
 	return val;
 }
 
-static inline uint8 SATURATE_USB(sint16 val)
+static uint8 SATURATE_USB(sint16 val)
 {
 	if (val > 0xff) {
 		gCPU.vscr |= VSCR_SAT;
@@ -126,7 +140,7 @@ static inline uint8 SATURATE_USB(sint16 val)
 	return (uint8)val;
 }
 
-static inline sint16 SATURATE_SH(sint32 val)
+static sint16 SATURATE_SH(sint32 val)
 {
 	if (val > 32767) {			// 0x7fff
 		gCPU.vscr |= VSCR_SAT;
@@ -138,7 +152,7 @@ static inline sint16 SATURATE_SH(sint32 val)
 	return val;
 }
 
-static inline uint16 SATURATE_USH(sint32 val)
+static uint16 SATURATE_USH(sint32 val)
 {
 	if (val > 0xffff) {
 		gCPU.vscr |= VSCR_SAT;
@@ -150,7 +164,7 @@ static inline uint16 SATURATE_USH(sint32 val)
 	return (uint16)val;
 }
 
-static inline sint32 SATURATE_UW(sint64 val)
+static sint32 SATURATE_UW(sint64 val)
 {
 	if (val > 0xffffffffLL) {
 		gCPU.vscr |= VSCR_SAT;
@@ -159,7 +173,7 @@ static inline sint32 SATURATE_UW(sint64 val)
 	return val;
 }
 
-static inline sint32 SATURATE_SW(sint64 val)
+static sint32 SATURATE_SW(sint64 val)
 {
 	if (val > 2147483647LL) {			// 0x7fffffff
 		gCPU.vscr |= VSCR_SAT;
@@ -2551,7 +2565,7 @@ void ppc_opc_vrfin()
 	 * This is covered by the function rint()
 	 */
 	for (int i=0; i<4; i++) { //FIXME: This might not comply with Java FP
-		gCPU.vr[vrD].f[i] = rintf(gCPU.vr[vrB].f[i]);
+		gCPU.vr[vrD].f[i] = floor(gCPU.vr[vrB].f[i] + 0.5f);
 	}
 }
 

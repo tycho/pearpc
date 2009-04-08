@@ -24,173 +24,172 @@
 #include "system/types.h"
 #include "tools/snprintf.h"
 
+#define PPC_CPU_TRACE(...) ht_printf("[CPU/CPU] " __VA_ARGS__)
+#define PPC_ALU_TRACE(...) ht_printf("[CPU/ALU] " __VA_ARGS__)
+#define PPC_FPU_TRACE(...) ht_printf("[CPU/FPU] " __VA_ARGS__)
+#define PPC_DEC_TRACE(...) ht_printf("[CPU/DEC] " __VA_ARGS__)
+#define PPC_ESC_TRACE(...) ht_printf("[CPU/ESC] " __VA_ARGS__)
+//#define PPC_EXC_TRACE(...) ht_printf("[CPU/EXC] " __VA_ARGS__)
+#define PPC_MMU_TRACE(...) ht_printf("[CPU/MMU] " __VA_ARGS__)
+#define PPC_OPC_TRACE(...) ht_printf("[CPU/OPC] " __VA_ARGS__)
+#define IO_PROM_TRACE(...) ht_printf("[IO/PROM] " __VA_ARGS__)
+//#define IO_PROM_FS_TRACE(...) ht_printf("[IO/PROM/FS] " __VA_ARGS__)
+//#define IO_3C90X_TRACE(...) ht_printf("[IO/3c90x] " __VA_ARGS__)
+//#define IO_RTL8139_TRACE(...) ht_printf("[IO/rtl8139] " __VA_ARGS__)
+//#define IO_GRAPHIC_TRACE(...) ht_printf("[IO/GCARD] " __VA_ARGS__)
+//#define IO_CUDA_TRACE(...) ht_printf("[IO/CUDA] " __VA_ARGS__)
+//#define IO_PIC_TRACE(...) ht_printf("[IO/PIC] " __VA_ARGS__)
+//#define IO_PCI_TRACE(...) ht_printf("[IO/PCI] " __VA_ARGS__)
+//#define IO_MACIO_TRACE(...) ht_printf("[IO/MACIO] " __VA_ARGS__)
+//#define IO_NVRAM_TRACE(...) ht_printf("[IO/NVRAM] " __VA_ARGS__)
+//#define IO_IDE_TRACE(...) ht_printf("[IO/IDE] " __VA_ARGS__)
+//#define IO_USB_TRACE(...) ht_printf("[IO/USB] " __VA_ARGS__)
+#define IO_SERIAL_TRACE(...) ht_printf("[IO/SERIAL] " __VA_ARGS__)
+#define IO_CORE_TRACE(...) ht_printf("[IO/Generic] " __VA_ARGS__)
 
-#define PPC_CPU_TRACE(msg...) ht_printf("[CPU/CPU] "msg)
-#define PPC_ALU_TRACE(msg...) ht_printf("[CPU/ALU] "msg)
-#define PPC_FPU_TRACE(msg...) ht_printf("[CPU/FPU] "msg)
-#define PPC_DEC_TRACE(msg...) ht_printf("[CPU/DEC] "msg)
-#define PPC_ESC_TRACE(msg...) ht_printf("[CPU/ESC] "msg)
-//#define PPC_EXC_TRACE(msg...) ht_printf("[CPU/EXC] "msg)
-#define PPC_MMU_TRACE(msg...) ht_printf("[CPU/MMU] "msg)
-#define PPC_OPC_TRACE(msg...) ht_printf("[CPU/OPC] "msg)
-//#define IO_PROM_TRACE(msg...) ht_printf("[IO/PROM] "msg)
-//#define IO_PROM_FS_TRACE(msg...) ht_printf("[IO/PROM/FS] "msg)
-//#define IO_3C90X_TRACE(msg...) ht_printf("[IO/3c90x] "msg)
-//#define IO_RTL8139_TRACE(msg...) ht_printf("[IO/rtl8139] "msg)
-//#define IO_GRAPHIC_TRACE(msg...) ht_printf("[IO/GCARD] "msg)
-//#define IO_CUDA_TRACE(msg...) ht_printf("[IO/CUDA] "msg)
-//#define IO_PIC_TRACE(msg...) ht_printf("[IO/PIC] "msg)
-//#define IO_PCI_TRACE(msg...) ht_printf("[IO/PCI] "msg)
-//#define IO_MACIO_TRACE(msg...) ht_printf("[IO/MACIO] "msg)
-//#define IO_NVRAM_TRACE(msg...) ht_printf("[IO/NVRAM] "msg)
-//#define IO_IDE_TRACE(msg...) ht_printf("[IO/IDE] "msg)
-//#define IO_USB_TRACE(msg...) ht_printf("[IO/USB] "msg)
-#define IO_SERIAL_TRACE(msg...) ht_printf("[IO/SERIAL] "msg)
-#define IO_CORE_TRACE(msg...) ht_printf("[IO/Generic] "msg)
+#define PPC_CPU_WARN(...) ht_printf("[CPU/CPU] <Warning> " __VA_ARGS__)
+#define PPC_ALU_WARN(...) ht_printf("[CPU/ALU] <Warning> " __VA_ARGS__)
+#define PPC_FPU_WARN(...) ht_printf("[CPU/FPU] <Warning> " __VA_ARGS__)
+#define PPC_DEC_WARN(...) ht_printf("[CPU/DEC] <Warning> " __VA_ARGS__)
+#define PPC_ESC_WARN(...) ht_printf("[CPU/ESC] <Warning> " __VA_ARGS__)
+#define PPC_EXC_WARN(...) ht_printf("[CPU/EXC] <Warning> " __VA_ARGS__)
+#define PPC_MMU_WARN(...) ht_printf("[CPU/MMU] <Warning> " __VA_ARGS__)
+#define PPC_OPC_WARN(...) ht_printf("[CPU/OPC] <Warning> " __VA_ARGS__)
+#define IO_PROM_WARN(...) ht_printf("[IO/PROM] <Warning> " __VA_ARGS__)
+#define IO_PROM_FS_WARN(...) ht_printf("[IO/PROM/FS] <Warning> " __VA_ARGS__)
+#define IO_3C90X_WARN(...) ht_printf("[IO/3c90x] <Warning> " __VA_ARGS__)
+#define IO_RTL8139_WARN(...) ht_printf("[IO/rtl8139] <Warning> " __VA_ARGS__)
+#define IO_GRAPHIC_WARN(...) ht_printf("[IO/GCARD] <Warning> " __VA_ARGS__)
+#define IO_CUDA_WARN(...) ht_printf("[IO/CUDA] <Warning> " __VA_ARGS__)
+#define IO_PIC_WARN(...) ht_printf("[IO/PIC] <Warning> " __VA_ARGS__)
+#define IO_PCI_WARN(...) ht_printf("[IO/PCI] <Warning> " __VA_ARGS__)
+#define IO_MACIO_WARN(...) ht_printf("[IO/MACIO] <Warning> " __VA_ARGS__)
+#define IO_NVRAM_WARN(...) ht_printf("[IO/NVRAM] <Warning> " __VA_ARGS__)
+#define IO_IDE_WARN(...) ht_printf("[IO/IDE] <Warning> " __VA_ARGS__)
+#define IO_USB_WARN(...) ht_printf("[IO/USB] <Warning> " __VA_ARGS__)
+#define IO_SERIAL_WARN(...) ht_printf("[IO/SERIAL] <Warning> " __VA_ARGS__)
+#define IO_CORE_WARN(...) ht_printf("[IO/Generic] <Warning> " __VA_ARGS__)
 
-#define PPC_CPU_WARN(msg...) ht_printf("[CPU/CPU] <Warning> "msg)
-#define PPC_ALU_WARN(msg...) ht_printf("[CPU/ALU] <Warning> "msg)
-#define PPC_FPU_WARN(msg...) ht_printf("[CPU/FPU] <Warning> "msg)
-#define PPC_DEC_WARN(msg...) ht_printf("[CPU/DEC] <Warning> "msg)
-#define PPC_ESC_WARN(msg...) ht_printf("[CPU/ESC] <Warning> "msg)
-#define PPC_EXC_WARN(msg...) ht_printf("[CPU/EXC] <Warning> "msg)
-#define PPC_MMU_WARN(msg...) ht_printf("[CPU/MMU] <Warning> "msg)
-#define PPC_OPC_WARN(msg...) ht_printf("[CPU/OPC] <Warning> "msg)
-#define IO_PROM_WARN(msg...) ht_printf("[IO/PROM] <Warning> "msg)
-#define IO_PROM_FS_WARN(msg...) ht_printf("[IO/PROM/FS] <Warning> "msg)
-#define IO_3C90X_WARN(msg...) ht_printf("[IO/3c90x] <Warning> "msg)
-#define IO_RTL8139_WARN(msg...) ht_printf("[IO/rtl8139] <Warning> "msg)
-#define IO_GRAPHIC_WARN(msg...) ht_printf("[IO/GCARD] <Warning> "msg)
-#define IO_CUDA_WARN(msg...) ht_printf("[IO/CUDA] <Warning> "msg)
-#define IO_PIC_WARN(msg...) ht_printf("[IO/PIC] <Warning> "msg)
-#define IO_PCI_WARN(msg...) ht_printf("[IO/PCI] <Warning> "msg)
-#define IO_MACIO_WARN(msg...) ht_printf("[IO/MACIO] <Warning> "msg)
-#define IO_NVRAM_WARN(msg...) ht_printf("[IO/NVRAM] <Warning> "msg)
-#define IO_IDE_WARN(msg...) ht_printf("[IO/IDE] <Warning> "msg)
-#define IO_USB_WARN(msg...) ht_printf("[IO/USB] <Warning> "msg)
-#define IO_SERIAL_WARN(msg...) ht_printf("[IO/SERIAL] <Warning> "msg)
-#define IO_CORE_WARN(msg...) ht_printf("[IO/Generic] <Warning> "msg)
-
-#define PPC_CPU_ERR(msg...) {ht_printf("[CPU/CPU] <Error> "msg);exit(1); } 
-#define PPC_ALU_ERR(msg...) {ht_printf("[CPU/ALU] <Error> "msg);exit(1); }
-#define PPC_FPU_ERR(msg...) {ht_printf("[CPU/FPU] <Error> "msg);exit(1); }
-#define PPC_DEC_ERR(msg...) {ht_printf("[CPU/DEC] <Error> "msg);exit(1); }
-#define PPC_ESC_ERR(msg...) {ht_printf("[CPU/ESC] <Error> "msg);exit(1); }
-#define PPC_EXC_ERR(msg...) {ht_printf("[CPU/EXC] <Error> "msg);exit(1); }
-#define PPC_MMU_ERR(msg...) {ht_printf("[CPU/MMU] <Error> "msg);exit(1); }
-#define PPC_OPC_ERR(msg...) {ht_printf("[CPU/OPC] <Error> "msg);exit(1); }
-#define IO_PROM_ERR(msg...) {ht_printf("[IO/PROM] <Error> "msg);exit(1); }
-#define IO_PROM_FS_ERR(msg...) {ht_printf("[IO/PROM/FS] <Error> "msg);exit(1); }
-#define IO_3C90X_ERR(msg...) {ht_printf("[IO/3c90x] <Error> "msg);exit(1); }
-#define IO_RTL8139_ERR(msg...) {ht_printf("[IO/rtl8139] <Error> "msg);exit(1); }
-#define IO_GRAPHIC_ERR(msg...) {ht_printf("[IO/GCARD] <Error> "msg);exit(1); }
-#define IO_CUDA_ERR(msg...) {ht_printf("[IO/CUDA] <Error> "msg);exit(1); }
-#define IO_PIC_ERR(msg...) {ht_printf("[IO/PIC] <Error> "msg);exit(1); }
-#define IO_PCI_ERR(msg...) {ht_printf("[IO/PCI] <Error> "msg);exit(1); }
-#define IO_MACIO_ERR(msg...) {ht_printf("[IO/MACIO] <Error> "msg);exit(1); }
-#define IO_NVRAM_ERR(msg...) {ht_printf("[IO/NVRAM] <Error> "msg);exit(1); }
-#define IO_IDE_ERR(msg...) {ht_printf("[IO/IDE] <Error> "msg);exit(1); }
-#define IO_USB_ERR(msg...) {ht_printf("[IO/IDE] <Error> "msg);exit(1); }
-#define IO_SERIAL_ERR(msg...) {ht_printf("[IO/SERIAL] <Error> "msg);exit(1); }
-#define IO_CORE_ERR(msg...) {ht_printf("[IO/Generic] <Error> "msg);exit(1); }
+#define PPC_CPU_ERR(...) {ht_printf("[CPU/CPU] <Error> " __VA_ARGS__);exit(1); } 
+#define PPC_ALU_ERR(...) {ht_printf("[CPU/ALU] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_FPU_ERR(...) {ht_printf("[CPU/FPU] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_DEC_ERR(...) {ht_printf("[CPU/DEC] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_ESC_ERR(...) {ht_printf("[CPU/ESC] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_EXC_ERR(...) {ht_printf("[CPU/EXC] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_MMU_ERR(...) {ht_printf("[CPU/MMU] <Error> " __VA_ARGS__);exit(1); }
+#define PPC_OPC_ERR(...) {ht_printf("[CPU/OPC] <Error> " __VA_ARGS__);exit(1); }
+#define IO_PROM_ERR(...) {ht_printf("[IO/PROM] <Error> " __VA_ARGS__);exit(1); }
+#define IO_PROM_FS_ERR(...) {ht_printf("[IO/PROM/FS] <Error> " __VA_ARGS__);exit(1); }
+#define IO_3C90X_ERR(...) {ht_printf("[IO/3c90x] <Error> " __VA_ARGS__);exit(1); }
+#define IO_RTL8139_ERR(...) {ht_printf("[IO/rtl8139] <Error> " __VA_ARGS__);exit(1); }
+#define IO_GRAPHIC_ERR(...) {ht_printf("[IO/GCARD] <Error> " __VA_ARGS__);exit(1); }
+#define IO_CUDA_ERR(...) {ht_printf("[IO/CUDA] <Error> " __VA_ARGS__);exit(1); }
+#define IO_PIC_ERR(...) {ht_printf("[IO/PIC] <Error> " __VA_ARGS__);exit(1); }
+#define IO_PCI_ERR(...) {ht_printf("[IO/PCI] <Error> " __VA_ARGS__);exit(1); }
+#define IO_MACIO_ERR(...) {ht_printf("[IO/MACIO] <Error> " __VA_ARGS__);exit(1); }
+#define IO_NVRAM_ERR(...) {ht_printf("[IO/NVRAM] <Error> " __VA_ARGS__);exit(1); }
+#define IO_IDE_ERR(...) {ht_printf("[IO/IDE] <Error> " __VA_ARGS__);exit(1); }
+#define IO_USB_ERR(...) {ht_printf("[IO/IDE] <Error> " __VA_ARGS__);exit(1); }
+#define IO_SERIAL_ERR(...) {ht_printf("[IO/SERIAL] <Error> " __VA_ARGS__);exit(1); }
+#define IO_CORE_ERR(...) {ht_printf("[IO/Generic] <Error> " __VA_ARGS__);exit(1); }
 
 /*
  *
  */
 #ifndef PPC_CPU_TRACE
-#define PPC_CPU_TRACE(msg...)
+#define PPC_CPU_TRACE(...)
 #endif
 
 #ifndef PPC_ALU_TRACE
-#define PPC_ALU_TRACE(msg...)
+#define PPC_ALU_TRACE(...)
 #endif
 
 #ifndef PPC_FPU_TRACE
-#define PPC_FPU_TRACE(msg...)
+#define PPC_FPU_TRACE(...)
 #endif
 
 #ifndef PPC_DEC_TRACE
-#define PPC_DEC_TRACE(msg...)
+#define PPC_DEC_TRACE(...)
 #endif
 
 #ifndef PPC_EXC_TRACE
-#define PPC_EXC_TRACE(msg...)
+#define PPC_EXC_TRACE(...)
 #endif
 
 #ifndef PPC_ESC_TRACE
-#define PPC_ESC_TRACE(msg...)
+#define PPC_ESC_TRACE(...)
 #endif
 
 #ifndef PPC_MMU_TRACE
-#define PPC_MMU_TRACE(msg...)
+#define PPC_MMU_TRACE(...)
 #endif
 
 #ifndef PPC_OPC_TRACE
-#define PPC_OPC_TRACE(msg...)
+#define PPC_OPC_TRACE(...)
 #endif
 
 #ifndef PPC_OPC_WARN
-#define PPC_OPC_WARN(msg...)
+#define PPC_OPC_WARN(...)
 #endif
 
 #ifndef IO_PROM_TRACE
-#define IO_PROM_TRACE(msg...)
+#define IO_PROM_TRACE(...)
 #endif
 
 #ifndef IO_PROM_FS_TRACE
-#define IO_PROM_FS_TRACE(msg...)
+#define IO_PROM_FS_TRACE(...)
 #endif
 
 #ifndef IO_GRAPHIC_TRACE
-#define IO_GRAPHIC_TRACE(msg...)
+#define IO_GRAPHIC_TRACE(...)
 #endif
 
 #ifndef IO_CUDA_TRACE
-#define IO_CUDA_TRACE(msg...)
+#define IO_CUDA_TRACE(...)
 #endif
 
 #ifndef IO_PIC_TRACE
-#define IO_PIC_TRACE(msg...)
+#define IO_PIC_TRACE(...)
 #endif
 
 #ifndef IO_PCI_TRACE
-#define IO_PCI_TRACE(msg...)
+#define IO_PCI_TRACE(...)
 #endif
 
 #ifndef IO_MACIO_TRACE
-#define IO_MACIO_TRACE(msg...)
+#define IO_MACIO_TRACE(...)
 #endif
 
 #ifndef IO_ISA_TRACE
-#define IO_ISA_TRACE(msg...)
+#define IO_ISA_TRACE(...)
 #endif
 
 #ifndef IO_IDE_TRACE
-#define IO_IDE_TRACE(msg...)
+#define IO_IDE_TRACE(...)
 #endif
 
 #ifndef IO_CORE_TRACE
-#define IO_CORE_TRACE(msg...)
+#define IO_CORE_TRACE(...)
 #endif
 
 #ifndef IO_NVRAM_TRACE
-#define IO_NVRAM_TRACE(msg...)
+#define IO_NVRAM_TRACE(...)
 #endif
 
 #ifndef IO_USB_TRACE
-#define IO_USB_TRACE(msg...)
+#define IO_USB_TRACE(...)
 #endif
 
 #ifndef IO_SERIAL_TRACE
-#define IO_SERIAL_TRACE(msg...)
+#define IO_SERIAL_TRACE(...)
 #endif
 
 #ifndef IO_3C90X_TRACE
-#define IO_3C90X_TRACE(msg...)
+#define IO_3C90X_TRACE(...)
 #endif
 
 #ifndef IO_RTL8139_TRACE
-#define IO_RTL8139_TRACE(msg...)
+#define IO_RTL8139_TRACE(...)
 #endif
 
 #endif

@@ -29,6 +29,6 @@
 void ppc_set_singlestep_v(bool v, const char *file, int line, const char *infoformat, ...);
 void ppc_set_singlestep_nonverbose(bool v);
 
-#define SINGLESTEP(info...)	ppc_set_singlestep_v(true, __FILE__, __LINE__, info)
+#define SINGLESTEP(...)	ppc_set_singlestep_v(true, __FILE__, __LINE__, __VA_ARGS__)
 
 #endif

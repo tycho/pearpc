@@ -154,3 +154,10 @@
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
 #define YYTEXT_POINTER 1
+
+#define HAVE_U_INT8_T 1
+#define HAVE_U_INT16_T 1
+#define HAVE_U_INT32_T 1
+#define HAVE_U_INT64_T 1
+
+#define YY_NO_UNISTD_H

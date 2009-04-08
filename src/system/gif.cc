@@ -27,6 +27,9 @@
 #include "tools/except.h"
 #include "tools/snprintf.h"
 
+#ifdef TARGET_COMPILER_VC
+#pragma pack(push,1)
+#endif
 struct GIF_IDB {
 	byte ISH;	// = 0x2c
 	uint16 x;
@@ -36,6 +39,9 @@ struct GIF_IDB {
 	byte flags;
 	byte initial_code_size;
 } PACKED;
+#ifdef TARGET_COMPILER_VC
+#pragma pack(pop)
+#endif
 
 Gif::Gif()
 {
@@ -56,7 +62,7 @@ Gif::Gif(Stream &str)
 	}
 }
 
-static inline bool getlogbyte(Stream &stream, int width, int &bitleft, int &byteleft, uint16 &lbyte, uint16 &curcode, int &bidx, byte *buf)
+static bool getlogbyte(Stream &stream, int width, int &bitleft, int &byteleft, uint16 &lbyte, uint16 &curcode, int &bidx, byte *buf)
 {
 	curcode = lbyte >> (8-bitleft);
 	curcode &= (1<<width)-1;

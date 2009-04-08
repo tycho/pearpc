@@ -23,7 +23,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <exception>
-#include <unistd.h>
+//#include <unistd.h>
 
 #include "info.h"
 #include "cpu/cpu.h"
@@ -109,15 +109,15 @@ void initMenu()
 	gDisplay->finishMenu();*/
 }
 
-static char *textlogo UNUSED = "\e[?7h\e[40m\e[2J\e[40m\n\n\n\n\n\e[0;1m"
-"\e[24C\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4  "
+static char *textlogo UNUSED = "\033[?7h\033[40m\033[2J\033[40m\n\n\n\n\n\033[0;1m"
+"\033[24C\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4  "
 "\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4   "
-"\xda\xc4\xc4\xc4\xc4\xc4\xc4\n\e[24C\e[0m\xda\xc4\xc4   "
+"\xda\xc4\xc4\xc4\xc4\xc4\xc4\n\033[24C\033[0m\xda\xc4\xc4   "
 "\xda\xc4\xc4 \xda\xc4\xc4   \xda\xc4\xc4 \xda\xc4\xc4   "
-"\xda\xc4\xc4\n\e[24C\e[1;30m\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4  "
+"\xda\xc4\xc4\n\033[24C\033[1;30m\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4  "
 "\xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4  "
-"\xda\xc4\xc4\n\e[24C\e[34m\xda\xc4\xc4\e[7C\xda\xc4\xc4\e[7C\xda\xc4\xc4   "
-"\xda\xc4\xc4\n\e[24C\e[0;34m\xda\xc4\xc4\e[7C\xda\xc4\xc4\e[8C\xda\xc4\xc4\xc4\xc4\xc4\xc4\n\n";
+"\xda\xc4\xc4\n\033[24C\033[34m\xda\xc4\xc4\033[7C\xda\xc4\xc4\033[7C\xda\xc4\xc4   "
+"\xda\xc4\xc4\n\033[24C\033[0;34m\xda\xc4\xc4\033[7C\xda\xc4\xc4\033[8C\xda\xc4\xc4\xc4\xc4\xc4\xc4\n\n";
 
 static const vcp CONSOLE_BG = VC_BLACK;
 
@@ -133,7 +133,7 @@ void drawLogo()
 	gDisplay->fillAllVT(VCP(VC_BLUE, CONSOLE_BG), ' ');
 //	gDisplay->print(textlogo);
 	gDisplay->setAnsiColor(VCP(VC_LIGHT(VC_BLUE), VC_TRANSPARENT));
-	gDisplay->print("\e[H"APPNAME" "APPVERSION" "COPYRIGHT"\n\n");
+	gDisplay->print("\033[H"APPNAME" "APPVERSION" "COPYRIGHT"\n\n");
 }
 
 void tests()
