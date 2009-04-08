@@ -145,10 +145,10 @@ EXPORT(x86_mmx_convert_2be555_to_2le565):
 	pand		%mm6, [_2be555_mask_b]
 	psllw		%mm1, 1		# red
 	psllw		%mm2, 1		# green
-#	psllw		%mm3, 0		# blue
+##	psllw		%mm3, 0		# blue
 	psllw		%mm4, 1		# red
 	psllw		%mm5, 1		# green
-#	psllw		%mm6, 0		# blue
+##	psllw		%mm6, 0		# blue
 	por		%mm1, %mm2
 	por		%mm4, %mm5
 	por		%mm1, %mm3
@@ -350,10 +350,10 @@ EXPORT(x86_sse2_convert_2be555_to_2le565):
 	pand		%xmm6, [_2be555_mask_b]
 	psllw		%xmm1, 1		# red
 	psllw		%xmm2, 1		# green
-#	psllw		%xmm3, 0		# blue
+##	psllw		%xmm3, 0		# blue
 	psllw		%xmm4, 1		# red
 	psllw		%xmm5, 1		# green
-#	psllw		%xmm6, 0		# blue
+##	psllw		%xmm6, 0		# blue
 	por		%xmm1, %xmm2
 	por		%xmm4, %xmm5
 	por		%xmm1, %xmm3
