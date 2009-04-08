@@ -161,3 +161,8 @@
 #define HAVE_U_INT64_T 1
 
 #define YY_NO_UNISTD_H
+
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_NONSTDC_NO_DEPRECATE
+
+#pragma warning (disable: 4018 4552 4390)
