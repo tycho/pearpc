@@ -118,14 +118,12 @@
 
 /* Location of system/arch/$ARCH_DIR/sysfeatures.h */
 #define SYSTEM_ARCH_SPECIFIC_FEATURES_DIR "system/arch/x86/sysfeatures.h"
-#elif defined(TARGET_CPU_X64)
+#else
 /* Location of system/arch/$ARCH_DIR/sysendian.h */
 #define SYSTEM_ARCH_SPECIFIC_ENDIAN_DIR "system/arch/generic/sysendian.h"
 
 /* Location of system/arch/$ARCH_DIR/sysfeatures.h */
 #define SYSTEM_ARCH_SPECIFIC_FEATURES_DIR "system/arch/generic/sysfeatures.h"
-#else
-#error "No headers set for this architecture."
 #endif
 
 /* Location of system/osapi/$OSAPI_DIR/types.h */
