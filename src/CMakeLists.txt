@@ -23,6 +23,8 @@ IF(NOT MSVC)
 	add_library(vaccel system/arch/x86/vaccel.S)
 ENDIF(NOT MSVC)
 IF(MSVC)
+	set_property(SOURCE cpu/cpu_jitc_x86/jitc_mmu.obj PROPERTY LANGUAGE C)
+	set_property(SOURCE cpu/cpu_jitc_x86/jitc_tools.obj PROPERTY LANGUAGE C)
 	set_property(SOURCE system/arch/x86/vaccel.obj PROPERTY LANGUAGE C)
 	add_library(vaccel system/arch/x86/vaccel.obj)
 ENDIF(MSVC)
@@ -38,7 +40,7 @@ BISON_TARGET(DebuggerParser debug/debugparse.y debug/debugparse.c)
 add_custom_target(PearPCBuildNumber DEPENDS ${PearPC_BINARY_DIR}/src/build_number.h)
 
 # JIT CPU
-add_library(cpu-jitc cpu/cpu_jitc_x86/jitc.cc cpu/cpu_jitc_x86/jitc_debug.cc cpu/cpu_jitc_x86/jitc_mmu.S cpu/cpu_jitc_x86/jitc_tools.S cpu/cpu_jitc_x86/ppc_alu.cc cpu/cpu_jitc_x86/ppc_cpu.cc cpu/cpu_jitc_x86/ppc_dec.cc cpu/cpu_jitc_x86/ppc_esc.cc cpu/cpu_jitc_x86/ppc_exc.cc cpu/cpu_jitc_x86/ppc_fpu.cc cpu/cpu_jitc_x86/ppc_mmu.cc cpu/cpu_jitc_x86/ppc_opc.cc cpu/cpu_jitc_x86/ppc_vec.cc cpu/cpu_jitc_x86/x86asm.cc)
+add_library(cpu-jitc cpu/cpu_jitc_x86/jitc.cc cpu/cpu_jitc_x86/jitc_debug.cc cpu/cpu_jitc_x86/jitc_mmu.S cpu/cpu_jitc_x86/jitc_mmu.obj cpu/cpu_jitc_x86/jitc_tools.S cpu/cpu_jitc_x86/jitc_tools.obj cpu/cpu_jitc_x86/ppc_alu.cc cpu/cpu_jitc_x86/ppc_cpu.cc cpu/cpu_jitc_x86/ppc_dec.cc cpu/cpu_jitc_x86/ppc_esc.cc cpu/cpu_jitc_x86/ppc_exc.cc cpu/cpu_jitc_x86/ppc_fpu.cc cpu/cpu_jitc_x86/ppc_mmu.cc cpu/cpu_jitc_x86/ppc_opc.cc cpu/cpu_jitc_x86/ppc_vec.cc cpu/cpu_jitc_x86/x86asm.cc)
 
 # interpreted CPU
 add_library(cpu-generic cpu/cpu_generic/ppc_alu.cc cpu/cpu_generic/ppc_cpu.cc cpu/cpu_generic/ppc_dec.cc cpu/cpu_generic/ppc_exc.cc cpu/cpu_generic/ppc_fpu.cc cpu/cpu_generic/ppc_mmu.cc cpu/cpu_generic/ppc_opc.cc cpu/cpu_generic/ppc_vec.cc)

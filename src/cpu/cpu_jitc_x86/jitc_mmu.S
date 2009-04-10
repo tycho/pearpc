@@ -1063,7 +1063,7 @@ EXPORT(ppc_write_effective_qword_asm):
 	call	EXTERN(io_mem_write128_glue)
 	ret
 
-ppc_write_effective_qword_sse_asm:
+EXPORT(ppc_write_effective_qword_sse_asm):
 	mov	[gCPU(pc_ofs)], %esi
 	and	%eax, 0xfffffff0
 	push	%edx
