@@ -644,8 +644,11 @@ void ppc_opc_divwx()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	if (!gCPU.gpr[rB]) {
-		PPC_ALU_WARN("division by zero @%08x\n", gCPU.pc);
-		SINGLESTEP("");
+        // divide by zero
+        if (gCPU.current_opc & PPC_OPC_OE) {
+            gCPU.xer |= XER_OV;
+        }
+        return;
 	}
 	sint32 a = gCPU.gpr[rA];
 	sint32 b = gCPU.gpr[rB];
@@ -664,7 +667,11 @@ void ppc_opc_divwox()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	if (!gCPU.gpr[rB]) {
-		PPC_ALU_ERR("division by zero\n");
+        // divide by zero
+        if (gCPU.current_opc & PPC_OPC_OE) {
+            gCPU.xer |= XER_OV;
+        }
+        return;
 	}
 	sint32 a = gCPU.gpr[rA];
 	sint32 b = gCPU.gpr[rB];
@@ -685,8 +692,11 @@ void ppc_opc_divwux()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	if (!gCPU.gpr[rB]) {
-		PPC_ALU_WARN("division by zero @%08x\n", gCPU.pc);
-		SINGLESTEP("");
+        // divide by zero
+        if (gCPU.current_opc & PPC_OPC_OE) {
+            gCPU.xer |= XER_OV;
+        }
+        return;
 	}
 	gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
 	if (gCPU.current_opc & PPC_OPC_Rc) {
@@ -703,7 +713,11 @@ void ppc_opc_divwuox()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	if (!gCPU.gpr[rB]) {
-//		PPC_ALU_ERR("division by zero\n");
+        // divide by zero
+        if (gCPU.current_opc & PPC_OPC_OE) {
+            gCPU.xer |= XER_OV;
+        }
+        return;
 	}
 	gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
 	if (gCPU.current_opc & PPC_OPC_Rc) {
@@ -781,7 +795,7 @@ void ppc_opc_mulhwx()
 	sint64 a = (sint32)gCPU.gpr[rA];
 	sint64 b = (sint32)gCPU.gpr[rB];
 	sint64 c = a*b;
-	gCPU.gpr[rD] = ((uint64)c)>>32;
+	gCPU.gpr[rD] = (uint32)(((uint64)c)>>32);
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -799,7 +813,7 @@ void ppc_opc_mulhwux()
 	uint64 a = gCPU.gpr[rA];
 	uint64 b = gCPU.gpr[rB];
 	uint64 c = a*b;
-	gCPU.gpr[rD] = c>>32;
+	gCPU.gpr[rD] = (uint32)(c>>32);
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -860,7 +874,7 @@ void ppc_opc_negx()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	PPC_OPC_ASSERT(rB == 0);
-	gCPU.gpr[rD] = -gCPU.gpr[rA];
+	gCPU.gpr[rD] = (uint32)(-(sint32)gCPU.gpr[rA]);
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -875,7 +889,7 @@ void ppc_opc_negox()
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
 	PPC_OPC_ASSERT(rB == 0);
-	gCPU.gpr[rD] = -gCPU.gpr[rA];
+	gCPU.gpr[rD] = (uint32)(-(sint32)gCPU.gpr[rA]);
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
