@@ -101,11 +101,14 @@ IF(CMAKE_COMPILER_IS_GNUCXX AND NOT XCODE)
 ENDIF(CMAKE_COMPILER_IS_GNUCXX AND NOT XCODE)
 ENDMACRO(ADD_PRECOMPILED_HEADER)
 
-if(APPLE)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
-endif(APPLE)
+#
+# BROKEN: Doesn't properly detect non-Apple GCC compilers.
+#
+# if(APPLE)
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
+# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
+# 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -arch i386 -arch x86_64 -arch ppc -arch ppc64")
+# endif(APPLE)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=gnu++98 -fno-common -fno-strict-aliasing -Wall -Wundef -Wno-long-long")
