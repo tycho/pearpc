@@ -643,16 +643,17 @@ void ppc_opc_divwx()
 {
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
-	if (!gCPU.gpr[rB]) {
+	if (gCPU.gpr[rB]) {
+	    sint32 a = gCPU.gpr[rA];
+	    sint32 b = gCPU.gpr[rB];
+	    gCPU.gpr[rD] = a / b;
+    } else {
         // divide by zero
         if (gCPU.current_opc & PPC_OPC_OE) {
             gCPU.xer |= XER_OV;
         }
-        return;
-	}
-	sint32 a = gCPU.gpr[rA];
-	sint32 b = gCPU.gpr[rB];
-	gCPU.gpr[rD] = a / b;
+        gCPU.gpr[rD] = 0;
+    }
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -666,16 +667,17 @@ void ppc_opc_divwox()
 {
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
-	if (!gCPU.gpr[rB]) {
+	if (gCPU.gpr[rB]) {
+	    sint32 a = gCPU.gpr[rA];
+	    sint32 b = gCPU.gpr[rB];
+	    gCPU.gpr[rD] = a / b;
+    } else {
         // divide by zero
         if (gCPU.current_opc & PPC_OPC_OE) {
             gCPU.xer |= XER_OV;
         }
-        return;
-	}
-	sint32 a = gCPU.gpr[rA];
-	sint32 b = gCPU.gpr[rB];
-	gCPU.gpr[rD] = a / b;
+        gCPU.gpr[rD] = 0;
+    }
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -691,14 +693,15 @@ void ppc_opc_divwux()
 {
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
-	if (!gCPU.gpr[rB]) {
+	if (gCPU.gpr[rB]) {
+	    gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
+    } else {
         // divide by zero
         if (gCPU.current_opc & PPC_OPC_OE) {
             gCPU.xer |= XER_OV;
         }
-        return;
-	}
-	gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
+        gCPU.gpr[rD] = 0;
+    }
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
@@ -712,14 +715,15 @@ void ppc_opc_divwuox()
 {
 	int rD, rA, rB;
 	PPC_OPC_TEMPL_XO(gCPU.current_opc, rD, rA, rB);
-	if (!gCPU.gpr[rB]) {
+	if (gCPU.gpr[rB]) {
+	    gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
+    } else {
         // divide by zero
         if (gCPU.current_opc & PPC_OPC_OE) {
             gCPU.xer |= XER_OV;
         }
-        return;
-	}
-	gCPU.gpr[rD] = gCPU.gpr[rA] / gCPU.gpr[rB];
+        gCPU.gpr[rD] = 0;
+    }
 	if (gCPU.current_opc & PPC_OPC_Rc) {
 		// update cr0 flags
 		ppc_update_cr0(gCPU.gpr[rD]);
