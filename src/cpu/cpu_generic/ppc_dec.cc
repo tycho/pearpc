@@ -89,7 +89,7 @@ static void ppc_opc_invalid()
 		gCPU.pc = gCPU.npc;
 		return;
 	}
-	fprintf(stderr, "[PPC/DEC] Bad opcode: %08x (%u:%u)\n",
+	ht_printf("[PPC/DEC] Bad opcode: %08x (%u:%u)\n",
 		gCPU.current_opc, PPC_OPC_MAIN(gCPU.current_opc),
 		PPC_OPC_EXT(gCPU.current_opc));
 
