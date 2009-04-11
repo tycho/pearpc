@@ -476,8 +476,10 @@ void ppc_opc_mfspr()
 			return;
 		}
 	}
-	fprintf(stderr, "unknown mfspr: %i:%i\n", spr1, spr2);
-	SINGLESTEP("invalid mfspr\n");
+	ht_printf("[CPU] illegal MFSPR call: %i:%i\n", spr1, spr2);
+    ppc_exception(PPC_EXC_PROGRAM, PPC_EXC_PROGRAM_ILL);
+    return;
+	//SINGLESTEP("invalid mfspr\n");
 }
 /*
  *	mfsr		Move from Segment Register
@@ -663,12 +665,11 @@ void ppc_opc_mtspr()
 		switch (spr1) {
 /*		case 18: gCPU.gpr[rD] = gCPU.dsisr; return;
 		case 19: gCPU.gpr[rD] = gCPU.dar; return;*/
-		case 22: {
+		case 22:
 			gCPU.dec = gCPU.gpr[rS];
 			gCPU.pdec = gCPU.dec;
 			gCPU.pdec *= TB_TO_PTB_FACTOR;
 			return;
-		}
 		case 25: 
 			if (!ppc_mmu_set_sdr1(gCPU.gpr[rS], true)) {
 				PPC_OPC_ERR("cannot set sdr1\n");
@@ -761,18 +762,25 @@ void ppc_opc_mtspr()
 //			PPC_OPC_WARN("write(%08x) to spr %d:%d (HID0) not supported! @%08x\n", gCPU.gpr[rS], spr1, spr2, gCPU.pc);
 			gCPU.hid[0] = gCPU.gpr[rS];
 			return;
-		case 17: return;
+		case 17:
+//			PPC_OPC_WARN("write(%08x) to spr %d:%d (HID1) not supported! @%08x\n", gCPU.gpr[rS], spr1, spr2, gCPU.pc);
+			gCPU.hid[1] = gCPU.gpr[rS];
+			return;
 		case 18:
 			PPC_OPC_ERR("write(%08x) to spr %d:%d (IABR) not supported!\n", gCPU.gpr[rS], spr1, spr2);
 			return;
 		case 21:
 			PPC_OPC_ERR("write(%08x) to spr %d:%d (DABR) not supported!\n", gCPU.gpr[rS], spr1, spr2);
 			return;
-		case 24:
-			PPC_OPC_WARN("write(%08x) to spr %d:%d (?) not supported!\n", gCPU.gpr[rS], spr1, spr2);
+        case 22:
+			PPC_OPC_ERR("write(%08x) to spr %d:%d (???) not supported!\n", gCPU.gpr[rS], spr1, spr2);
+            return;
+		case 23:
+			PPC_OPC_ERR("write(%08x) to spr %d:%d (???) not supported!\n", gCPU.gpr[rS], spr1, spr2);
 			return;
 		case 27:
 			PPC_OPC_WARN("write(%08x) to spr %d:%d (ICTC) not supported!\n", gCPU.gpr[rS], spr1, spr2);
+            gCPU.srr[1] = gCPU.gpr[rS];
 			return;
 		case 28:
 //			PPC_OPC_WARN("write(%08x) to spr %d:%d (THRM1) not supported!\n", gCPU.gpr[rS], spr1, spr2);
@@ -786,8 +794,10 @@ void ppc_opc_mtspr()
 		case 31: return;
 		}
 	}
-	fprintf(stderr, "unknown mtspr: %i:%i\n", spr1, spr2);
-	SINGLESTEP("unknown mtspr\n");
+	PPC_OPC_WARN("illegal MTSPR call: %i:%i\n", spr1, spr2);
+	//SINGLESTEP("unknown mtspr\n");
+    ppc_exception(PPC_EXC_PROGRAM, PPC_EXC_PROGRAM_ILL);
+    return;
 }
 /*
  *	mtsr		Move to Segment Register
