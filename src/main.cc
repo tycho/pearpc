@@ -387,7 +387,7 @@ int main(int argc, char *argv[])
 
 		// initialize initial paging (for prom)
 		uint32 PAGE_TABLE_ADDR = gConfig->getConfigInt("page_table_pa");
-		gDisplay->printf("initializing initial page table at %08x\n", PAGE_TABLE_ADDR);
+		gDisplay->printf("Initial page table at %08x\n", PAGE_TABLE_ADDR);
 
  		// 256 Kbytes Pagetable, 2^15 Pages, 2^12 PTEGs
 		if (!ppc_prom_set_sdr1(PAGE_TABLE_ADDR+0x03, false)) {
@@ -424,8 +424,7 @@ int main(int argc, char *argv[])
 
 		ppc_cpu_map_framebuffer(IO_GCARD_FRAMEBUFFER_PA_START, IO_GCARD_FRAMEBUFFER_EA);
 
-		gDisplay->print("now starting client...");
-		gDisplay->setAnsiColor(VCP(VC_WHITE, CONSOLE_BG));
+		gDisplay->print("Starting client...");
 
 		ppc_cpu_run();
 

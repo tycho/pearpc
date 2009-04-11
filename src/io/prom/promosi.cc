@@ -163,6 +163,7 @@ void prom_service_getprop(prom_args *pa)
 	PromNode *p = handleToPackage(phandle);	
 	PromProp *prop = p ? p->findProp(name.contentChar()) : 0;
 	if (!prop) {
+        IO_PROM_WARN("couldn't get property '%s'\n", name.contentChar());
 		pa->args[4] = 0xffffffff;
 	} else {
 		pa->args[4] = prop->getValue(buf, buflen);
@@ -330,9 +331,9 @@ void prom_service_call_method(prom_args *pa)
 	IO_PROM_TRACE("call-method('%y', %08x, ...)\n", &method, ihandle);
 	if (ihandle == 0xdeadbee2) {
 		if (method == "slw_emit") {
-//			gDisplay->printf("%c", pa->args[2]);
+ 			gDisplay->printf("%c", pa->args[2]);
 		} else if (method == "slw_cr") {
-//			gDisplay->print("\n");
+			gDisplay->print("\n");
 		} else if (method == "slw_init_keymap") {
 			uint32 a = prom_mem_malloc(20);
 			prom_mem_set(a, 0x00, 20);
