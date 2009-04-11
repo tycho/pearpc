@@ -1,7 +1,10 @@
 *CMakeFiles
 *cmake_install.cmake
 *.DS_Store
+*.exe
 *.o
+*.lib
+*.ilk
 *.a
 *.deps
 *.pbxuser
