@@ -620,6 +620,7 @@ void VT100Display::termWrite(const void *aBuf, int buflen)
 								// erase whole screen
 								VTERMLOG("ED 2 - erase whole screen\n");
 								mDisplay->fillVT(0, 0, w, h, mColor, ' ');
+								cursorx = 0; cursory = mTop;
 								break;
 							default:
 								VTERMLOG("ED ? - unsupported !\n");
