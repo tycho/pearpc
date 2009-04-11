@@ -1513,9 +1513,6 @@ static void read_partitions(Container &brs, bool only_bootable)
 
 bool prom_user_boot_partition(File *&ret_file, uint32 &size, bool &direct, uint32 &loadAddr, uint32 &entryAddr)
 {
-	//gDisplay->setAnsiColor(VCP(VC_LIGHT(VC_YELLOW), VC_TRANSPARENT));
-	gDisplay->printf("\n        PROM boot-loader\n");
-	gDisplay->printf("       ==================\n\n");
 	Array brs(true);
 	read_partitions(brs, true);
 	char key2digit[256];
