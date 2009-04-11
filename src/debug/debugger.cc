@@ -379,7 +379,7 @@ Debugger::Debugger()
 #ifdef HAVE_DEBUGGER
 	savedCPUState = gCPU;
 #endif
-	mUseColors = true;
+	mUseColors = false;
 }
 
 Debugger::~Debugger()
@@ -492,18 +492,19 @@ void Debugger::dump()
 		hiColor = "";
 		loColor = "";
 	}
+    printf("CPU REGISTER DUMP\n\n");
 	for (int i=0; i<8; i++) {
 		for (int j=0; j<4; j++) {
-			ht_printf("r%02d: %s%08x%s ", r, (savedCPUState.gpr[r] != gCPU.gpr[r])?hiColor:loColor , gCPU.gpr[r], loColor);
+			printf("r%02d: %s%08x%s ", r, (savedCPUState.gpr[r] != gCPU.gpr[r])?hiColor:loColor , gCPU.gpr[r], loColor);
 			r++;
 		}
-		ht_printf("\n");
+		printf("\n");
 	}
 /*	ht_printf("dbatu0: %08x dbatl0: %08x\n", gCPU.dbatu[0], gCPU.dbatl[0]);
 	ht_printf("dbatu1: %08x dbatl1: %08x\n", gCPU.dbatu[1], gCPU.dbatl[1]);
 	ht_printf("dbatu2: %08x dbatl2: %08x\n", gCPU.dbatu[2], gCPU.dbatl[2]);
 	ht_printf("dbatu3: %08x dbatl3: %08x\n", gCPU.dbatu[3], gCPU.dbatl[3]);*/
-	ht_printf("cr:  %s%08x%s xer: %s%08x%s lr:  %s%08x%s ctr: %s%08x%s\n", 
+	printf("cr:  %s%08x%s xer: %s%08x%s lr:  %s%08x%s ctr: %s%08x%s\n", 
 	(savedCPUState.cr != gCPU.cr)?hiColor:loColor, gCPU.cr, loColor,
 	(savedCPUState.xer != gCPU.xer)?hiColor:loColor, gCPU.xer, loColor,
 	(savedCPUState.lr != gCPU.lr)?hiColor:loColor, gCPU.lr, loColor,
