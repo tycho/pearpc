@@ -50,16 +50,16 @@ add_library(ppc-common configparser.cc debug/asm.cc debug/debugger.cc debug/debu
 add_executable(ppc-jitc main.cc)
 add_executable(ppc-generic main.cc)
 
-target_link_libraries (ppc-jitc CrissCross cpu-jitc ppc-common vaccel)
-target_link_libraries (ppc-generic CrissCross cpu-generic ppc-common vaccel)
+target_link_libraries (ppc-jitc cpu-jitc CrissCross ppc-common vaccel)
+target_link_libraries (ppc-generic cpu-generic CrissCross ppc-common vaccel)
 
 add_dependencies(ppc-common PearPCBuildNumber)
 add_dependencies(cpu-jitc PearPCBuildNumber)
 add_dependencies(cpu-generic PearPCBuildNumber)
 
 IF(NOT WIN32)
-	target_link_libraries(ppc-jitc pthread)
-	target_link_libraries(ppc-generic pthread)
+	target_link_libraries(ppc-jitc pthread rt)
+	target_link_libraries(ppc-generic pthread rt)
 ENDIF(NOT WIN32)
 
 IF(MSVC)
