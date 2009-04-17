@@ -412,9 +412,9 @@ EthTunDevice *createEthernetTunnel()
 #include <fcntl.h>
 
 #ifdef __FreeBSD__
-#define DEFAULT_DEVICE "/dev/tap0"
+#define DEFAULT_DEVICE "/dev/tap"
 #else
-#define DEFAULT_DEVICE "/dev/tun0"
+#define DEFAULT_DEVICE "/dev/tun"
 #endif
 
 class SimpleEthTunDevice: public UnixEthTunDevice {
@@ -426,10 +426,17 @@ SimpleEthTunDevice()
 
 int initDevice()
 {
-	/* allocate tun device */ 
-	if ((mFD = ::open(DEFAULT_DEVICE, O_RDWR | O_NONBLOCK)) < 0) {
-		throw MsgException("Failed to open "DEFAULT_DEVICE"! Is tunnel.kext loaded?");
+	/* allocate tun device */
+	char path[16];
+	for (char ind = 0; ind < 16; ind++) {
+		sprintf(path, "%s%d", DEFAULT_DEVICE, ind);
+		mFD = ::open(path, O_RDWR | O_NONBLOCK);
+		printf("Failed to open %s. Error #%d (%s)\n", path, errno, ::strerror(errno));
+		if (mFD > 0)
+			break;
 	}
+	if (mFD < 0)
+		throw MsgException("Failed to open any tun/tap devices.");
 	return 0;
 }
 
