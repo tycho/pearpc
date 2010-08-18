@@ -142,9 +142,13 @@ pci_ide0_slave_type = "cdrom"
 
 pci_3c90x_installed = 0
 pci_3c90x_mac = "de:ad:ca:fe:12:34"
+pci_3c90x_interface = ""
+pci_3c90x_type = "tap"
 
 pci_rtl8139_installed = 0
 pci_rtl8139_mac = "de:ad:ca:fe:12:35"
+pci_rtl8139_interface = ""
+pci_rtl8139_type = "tap"
 
 ##
 ##	USB
