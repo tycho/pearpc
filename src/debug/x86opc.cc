@@ -164,13 +164,13 @@
 #define __st6	TYPE_F, 6, SIZE_T, SIZE_T
 #define __st7	TYPE_F, 7, SIZE_T, SIZE_T
 
-char *x86_regs[3][8] = {
+const char *x86_regs[3][8] = {
 {"al",  "cl",  "dl",  "bl",  "ah",  "ch",  "dh",  "bh"},
 {"ax",  "cx",  "dx",  "bx",  "sp",  "bp",  "si",  "di"},
 {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"}
 };
 
-char *x86_segs[8] = {
+const char *x86_segs[8] = {
 "es", "cs", "ss", "ds", "fs", "gs", 0, 0
 };
 

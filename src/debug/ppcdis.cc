@@ -199,17 +199,17 @@ byte PPCDisassembler::getSize(dis_insn *disasm_insn)
 	return ((ppcdis_insn*)disasm_insn)->size;
 }
 
-char *PPCDisassembler::getName()
+const char *PPCDisassembler::getName()
 {
 	return "PPC/Disassembler";
 }
 
-char *PPCDisassembler::str(dis_insn *disasm_insn, int style)
+const char *PPCDisassembler::str(dis_insn *disasm_insn, int style)
 {
 	return strf(disasm_insn, style, "");
 }
 
-char *PPCDisassembler::strf(dis_insn *disasm_insn, int style, char *format)
+const char *PPCDisassembler::strf(dis_insn *disasm_insn, int style, const char *format)
 {
 	if (style & DIS_STYLE_HIGHLIGHT) enable_highlighting();
 	

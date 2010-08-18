@@ -605,7 +605,7 @@ int X86Disassembler::getmodrm()
 	return modrm;
 }
 
-char *X86Disassembler::getName()
+const char *X86Disassembler::getName()
 {
 	return "x86/Disassembler";
 }
@@ -940,12 +940,12 @@ void X86Disassembler::str_op(char *opstr, int *opstrlen, x86dis_insn *insn, x86_
 	}
 }
 
-void X86Disassembler::str_format(char **str, char **format, char *p, char *n, char *op[3], int oplen[3], char stopchar, int print)
+void X86Disassembler::str_format(char **str, const char **format, char *p, char *n, char *op[3], int oplen[3], char stopchar, int print)
 {
 	const char *cs_default = get_cs(e_cs_default);
 	const char *cs_symbol = get_cs(e_cs_symbol);
 
-	char *f=*format;
+	const char *f=*format;
 	char *s=*str;
 	while (*f) {
 		if (*f==stopchar) break;
@@ -1031,12 +1031,12 @@ void X86Disassembler::str_format(char **str, char **format, char *p, char *n, ch
 	*str=s;
 }
 
-char *X86Disassembler::str(dis_insn *disasm_insn, int options)
+const char *X86Disassembler::str(dis_insn *disasm_insn, int options)
 {
 	return strf(disasm_insn, options, DISASM_STRF_DEFAULT_FORMAT);
 }
 
-char *X86Disassembler::strf(dis_insn *disasm_insn, int opt, char *format)
+const char *X86Disassembler::strf(dis_insn *disasm_insn, int opt, const char *format)
 {
 	x86dis_insn *insn = (x86dis_insn*)disasm_insn;
 	char prefix[64];

@@ -153,7 +153,7 @@ struct x86opc_insn_op_special {
 };
 
 struct x86opc_insn {
-	char *name;
+	const char *name;
 	x86opc_insn_op op[3];
 };
 
@@ -177,8 +177,8 @@ struct x86opc_finsn {
 
 #define X86_GROUPS		20
 
-extern char *x86_regs[3][8];
-extern char *x86_segs[8];
+extern const char *x86_regs[3][8];
+extern const char *x86_segs[8];
 extern x86opc_insn x86_insns[256];
 extern x86opc_insn x86_insns_ext[256];
 extern x86opc_insn x86_group_insns[X86_GROUPS][8];

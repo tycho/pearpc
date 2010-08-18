@@ -166,7 +166,7 @@ static const char *hc_regname(uint32 a)
 {
 	a >>= 2;
 	if (a > 20) return "unknown";
-	char *names[] = {"revision","control","cmdstatus","intrstatus","intrenable",
+	static const char *names[] = {"revision","control","cmdstatus","intrstatus","intrenable",
 	"intrdisable","hcca","ed_periodcurrent","ed_controlhead","ed_controlcurrent",
 	"ed_bulkhead","ed_bulkcurrent","donehead","fminterval","fmremaining",
 	"fmnumber","periodicstart", "lsthresh", "roothub.a", "roothub.b", "roothub.status"};

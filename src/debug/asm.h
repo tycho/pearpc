@@ -79,10 +79,10 @@ public:
 /* new */
 	virtual	asm_insn *alloc_insn();
 	virtual	asm_code *encode(asm_insn *asm_insn, int options, CPU_ADDR cur_address);
-			char *get_error_msg();
-	virtual	char *get_name();
+      const	char *get_error_msg();
+	virtual const char *get_name();
 	virtual	int translate_str(asm_insn *asm_insn, const char *s);
-			void set_error_msg(char *format, ...);
+			void set_error_msg(const char *format, ...);
 			void set_imm_eval_proc(int (*imm_eval_proc)(void *context, char **s, uint32 *v), void *imm_eval_context);
 			asm_code *shortest(asm_code *codes);
 };
@@ -130,10 +130,10 @@ public:
 	virtual	dis_insn *duplicateInsn(dis_insn *disasm_insn)=0;
 	virtual	void	getOpcodeMetrics(int &min_length, int &max_length, int &min_look_ahead, int &avg_look_ahead, int &addr_align)=0;
 	virtual	byte getSize(dis_insn *disasm_insn)=0;
-	virtual	char *getName()=0;
+	virtual	const char *getName()=0;
 	virtual	bool selectNext(dis_insn *disasm_insn);
-	virtual	char *str(dis_insn *disasm_insn, int style);
-	virtual	char *strf(dis_insn *disasm_insn, int style, char *format)=0;
+	virtual	const char *str(dis_insn *disasm_insn, int style);
+	virtual	const char *strf(dis_insn *disasm_insn, int style, const char *format)=0;
 	virtual	bool validInsn(dis_insn *disasm_insn)=0;
 };
 
