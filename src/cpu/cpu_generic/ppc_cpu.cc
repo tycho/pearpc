@@ -157,12 +157,12 @@ void ppc_cpu_run()
 
 				clockIPS.Stop();
 				if (clockIPS.Elapsed() > 1.0) {
-					IPS = ops - lastClock;
+					IPS = (ops - lastClock) / clockIPS.Elapsed();
 					lastClock = ops;
 					clockIPS.Start();
+					ht_printf("@%08x (%u ops, %0.3lf MIPS) pdec: %08x lr: %08x\r",
+						gCPU.pc, ops, (double)IPS / 1000000.0, gCPU.pdec, gCPU.lr);
 				}
-                ht_printf("@%08x (%u ops, %0.3lf MIPS) pdec: %08x lr: %08x\r",
-                    gCPU.pc, ops, (double)IPS / 1000000.0, gCPU.pdec, gCPU.lr);
 #if 0
 				extern uint32 PIC_enable_low;
 				extern uint32 PIC_enable_high;
