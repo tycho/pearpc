@@ -412,14 +412,15 @@ static int btree_init(btree* bt, volume* vol, hfsp_fork_raw* fork)
 		 HFSP_EXTENT_DATA, bt->cnid);
 	    p += HEADER_RESERVEDOFFSET; // skip header
 	}
-	free(nodebuf);
 
 	bt->alloc_bits = malloc(alloc_size);
-    if (!bt->alloc_bits) {
-        free(buf);
+	if (!bt->alloc_bits) {
+	    free(nodebuf);
+	    free(buf);
 	    return ENOMEM;
-    }
+	}
 	memcpy(bt->alloc_bits, p, alloc_size);
+	free(nodebuf);
     }
 
     /*** for debugging ***/ 
